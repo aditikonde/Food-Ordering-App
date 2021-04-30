@@ -1,0 +1,46 @@
+.header-container{
+    height: 60px;
+    background-color: #263238;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media only screen and (min-width : 768px) {
+
+
+}
+
+.fast-food-logo{
+    color: white;
+    margin: 0 20px;
+}
+
+.search-action{
+    display: flex;
+    align-items: center;
+}
+
+.header-search-icon{
+    color: white;
+    width: 20%;
+}
+
+.search-restaurant-text{
+    width: 215px;
+    color: white;
+}
+
+.search-restaurant-text input[type=text]:focus {
+    border-bottom: 1px solid #fff;
+    box-shadow: 0 1px 0 0 #fff;
+    color: white;
+  }
+
+  .search-restaurant-text input[type=text]::placeholder{
+    color: white;
+}
+
+.header-login{
+    margin: 0 20px;
+}
