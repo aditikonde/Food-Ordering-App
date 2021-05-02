@@ -58,7 +58,8 @@ class Header extends Component {
             registerPasswordRequired: "displayNone",
             registerPassword: "",
             registrationSuccess: false,
-            loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+            // loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+            loggedIn: false
         }
     }
 
@@ -109,7 +110,7 @@ class Header extends Component {
                     openAlert: true
                 });
 
-                that.closeModalHandler();
+                // that.closeModalHandler();
             }
         });
 
@@ -118,10 +119,12 @@ class Header extends Component {
         xhrLogin.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         xhrLogin.setRequestHeader("Cache-Control", "no-cache");
         xhrLogin.send(dataLogin);
+        that.closeModalHandler();
     }
 
 
     registerClickHandler = (event) => {
+        sessionStorage.removeItem("access-token");//remove this after logout implementation
         this.state.firstName === "" ? this.setState({ firstNameRequired: "displayBlock" }) : this.setState({ firstNameRequired: "displayNone" });
         this.state.email === "" ? this.setState({ emailRequired: "displayBlock" }) : this.setState({ emailRequired: "displayNone" });
         this.state.registerContact === "" ? this.setState({ registerContactRequired: "displayBlock" }) : this.setState({ registerContactRequired: "displayNone" });
@@ -139,7 +142,9 @@ class Header extends Component {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({
-                    registrationSuccess: true
+                    registrationSuccess: true,
+                    openAlert: true,
+                    value: 0
                 });
             }
         });
@@ -273,7 +278,7 @@ class Header extends Component {
                         </Button>
                         </TabContainer>}
                 </Modal>
-                <Snackbar
+                { this.state.loggedIn && <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                     open={this.state.openAlert}
                     autoHideDuration={5000}
@@ -285,7 +290,20 @@ class Header extends Component {
                         color="inherit"
                         onClick={this.handleCloseAlert}>x
                     </IconButton>]}
-                />
+                />}
+                { !this.state.loggedIn && <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    open={this.state.openAlert}
+                    autoHideDuration={5000}
+                    onClose={this.handleCloseAlert}
+                    message="Registered successfully! Please login now!"
+                    action={[<IconButton
+                        key="close"
+                        aria-label="close"
+                        color="inherit"
+                        onClick={this.handleCloseAlert}>x
+                    </IconButton>]}
+                />}
             </div>
         )
     }
