@@ -7,8 +7,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { FormControl, FormHelperText, Input, InputLabel, Tab, Tabs, Typography } from '@material-ui/core';
+import { FormControl, FormHelperText, IconButton, Input, InputLabel, Snackbar, Tab, Tabs, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 
 const customStyles = {
@@ -55,7 +56,9 @@ class Header extends Component {
             registerContactRequired: "displayNone",
             registerContact: "",
             registerPasswordRequired: "displayNone",
-            registerPassword: ""
+            registerPassword: "",
+            registrationSuccess: false,
+            loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
     }
 
@@ -74,7 +77,10 @@ class Header extends Component {
             firstNameRequired: "displayNone",
             emailRequired: "displayNone",
             registerPasswordRequired: "displayNone",
-            registerContactRequired: "displayNone"
+            registerContactRequired: "displayNone",
+            openAlert: false,
+            vertical: 'bottom',
+            horizontal: 'left',
         });
     }
 
@@ -82,22 +88,67 @@ class Header extends Component {
         this.setState({ value })
     }
 
+    handleCloseAlert = (event) => {
+        this.setState({ openAlert: false });
+    };
+
     loginClickHandler = () => {
         this.state.contactnum === "" ? this.setState({ contactnumRequired: "displayBlock" }) : this.setState({ contactnumRequired: "displayNone" });
-
         this.state.password === "" ? this.setState({ passwordRequired: "displayBlock" }) : this.setState({ passwordRequired: "displayNone" });
+
+        let dataLogin = null;
+        let xhrLogin = new XMLHttpRequest();
+        let that = this;
+        xhrLogin.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+
+                that.setState({
+                    loggedIn: true,
+                    openAlert: true
+                });
+
+                that.closeModalHandler();
+            }
+        });
+
+        xhrLogin.open("POST", "http://localhost:8080/api/customer/login");
+        xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.contactnum + ":" + this.state.password));
+        xhrLogin.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        xhrLogin.setRequestHeader("Cache-Control", "no-cache");
+        xhrLogin.send(dataLogin);
     }
 
 
-    registerClickHandler = () => {
+    registerClickHandler = (event) => {
         this.state.firstName === "" ? this.setState({ firstNameRequired: "displayBlock" }) : this.setState({ firstNameRequired: "displayNone" });
-
         this.state.email === "" ? this.setState({ emailRequired: "displayBlock" }) : this.setState({ emailRequired: "displayNone" });
-
         this.state.registerContact === "" ? this.setState({ registerContactRequired: "displayBlock" }) : this.setState({ registerContactRequired: "displayNone" });
-
         this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "displayBlock" }) : this.setState({ registerPasswordRequired: "displayNone" });
+
+        let data = JSON.stringify({
+            contact_number: this.state.registerContact,
+            email_address: this.state.email,
+            first_name: this.state.firstName,
+            last_name: this.state.lastName,
+            password: this.state.registerPassword
+        });
+        let xhr = new XMLHttpRequest();
+        let that = this;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    registrationSuccess: true
+                });
+            }
+        });
+        xhr.open("POST", "http://localhost:8080/api/customer/signup");
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.send(data);
     }
+
 
     contactnumChangeHandler = (e) => {
         this.setState({ contactnum: e.target.value });
@@ -127,6 +178,7 @@ class Header extends Component {
         this.setState({ registerPassword: e.target.value });
     }
 
+
     render() {
         return (
             <div className="header-container">
@@ -154,7 +206,7 @@ class Header extends Component {
                         <TabContainer >
                             <FormControl required >
                                 <InputLabel htmlFor="contactnum" >Contact No.</InputLabel>
-                                <Input id="contactnum" type="number" onChange={this.contactnumChangeHandler} />
+                                <Input id="contactnum" type="text" onChange={this.contactnumChangeHandler} />
                                 <FormHelperText className={this.state.contactnumRequired}><span className="red" >required</span>
                                 </FormHelperText>
                             </FormControl>
@@ -221,6 +273,19 @@ class Header extends Component {
                         </Button>
                         </TabContainer>}
                 </Modal>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    open={this.state.openAlert}
+                    autoHideDuration={5000}
+                    onClose={this.handleCloseAlert}
+                    message="Logged in successfully!"
+                    action={[<IconButton
+                        key="close"
+                        aria-label="close"
+                        color="inherit"
+                        onClick={this.handleCloseAlert}>x
+                    </IconButton>]}
+                />
             </div>
         )
     }
