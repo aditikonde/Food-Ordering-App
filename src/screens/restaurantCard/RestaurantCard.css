@@ -1,3 +1,24 @@
 .res-card {
-    margin: 10px;
+    margin: 12px;
+}
+
+.rating-btn {
+    background-color: gold;
+    border: none;
+    padding: 7px 12px;
+    color: #fff;
+    margin-right: 50px;
+}
+
+.restaurant-name {
+    height: 70px;
+}
+
+
+.bottom-btns {
+    display: flex;
+}
+
+.content {
+    padding: 8px 10px;
 }

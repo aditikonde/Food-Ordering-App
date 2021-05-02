@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Controller from './screens/controller/Controller';
+import '../node_modules/font-awesome/css/font-awesome.min.css';
 
 ReactDOM.render(
   <div>

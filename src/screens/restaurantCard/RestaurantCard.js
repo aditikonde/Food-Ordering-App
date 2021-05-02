@@ -9,9 +9,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+
+
 const useStyles = makeStyles({
     root: {
-        maxWidth: 285,
+        maxWidth: 281
     },
     media: {
         height: 160,
@@ -19,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 
-export default function RestaurantCard() {
+export default function RestaurantCard(props) {
     const classes = useStyles();
 
     return (
@@ -28,27 +30,36 @@ export default function RestaurantCard() {
                 <CardActionArea>
                     <CardMedia
                         className={classes.media}
-                        image="https://i.ndtvimg.com/i/2016-04/restaurant-625_625x350_41461573961.jpg"
-                        title="Contemplative Reptile"
+                        image={props.restaurant.photo_URL}
+                        title="restaurant-image"
                     />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                            Lizard
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                            across all continents except Antarctica
-                        </Typography>
-                    </CardContent>
+                    <div className="content">
+                        <CardContent>
+                            <div className="restaurant-name">
+                                <Typography gutterBottom variant="h5" component="h2" >
+                                    {props.restaurant.restaurant_name}
+                                </Typography>
+                            </div>
+
+                            <Typography variant="body2"  >
+                                {props.restaurant.categories}
+                            </Typography>
+                        </CardContent>
+                    </div>
                 </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Share
-                    </Button>
-                    <Button size="small" color="primary">
-                        Learn More
-                    </Button>
-                </CardActions>
+                <div className="content">
+                    <CardActions>
+                        <div className="bottom-btns">
+                            <button size="small" className="rating-btn">
+                                <i class="fa fa-star" aria-hidden="true"></i> {props.restaurant.customer_rating} ({props.restaurant.number_customers_rated})
+                            </button>
+
+                            <Typography variant="body2" color="default" className="avg-cost">
+                                <i className="fa fa-inr" aria-hidden="true"></i>{props.restaurant.average_price} for two
+                            </Typography>
+                        </div>
+                    </CardActions>
+                </div>
             </Card>
         </div>
     );
