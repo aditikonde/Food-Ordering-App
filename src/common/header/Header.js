@@ -7,10 +7,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { FormControl, FormHelperText, IconButton, Input, InputLabel, Snackbar, Tab, Tabs, Typography } from '@material-ui/core';
+import { FormControl, FormHelperText, IconButton, Input, InputLabel, Menu, MenuItem, Snackbar, Tab, Tabs, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-
+import Home from '../../screens/home/Home';
+import ReactDOM from 'react-dom';
+import Profile from '../../screens/profile/Profile';
 
 const customStyles = {
     content: {
@@ -59,7 +60,8 @@ class Header extends Component {
             registerPassword: "",
             registrationSuccess: false,
             // loggedIn: sessionStorage.getItem("access-token") == null ? false : true
-            loggedIn: false
+            loggedIn: false,
+            anchorEl: null
         }
     }
 
@@ -93,6 +95,14 @@ class Header extends Component {
         this.setState({ openAlert: false });
     };
 
+    handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
     loginClickHandler = () => {
         this.state.contactnum === "" ? this.setState({ contactnumRequired: "displayBlock" }) : this.setState({ contactnumRequired: "displayNone" });
         this.state.password === "" ? this.setState({ passwordRequired: "displayBlock" }) : this.setState({ passwordRequired: "displayNone" });
@@ -104,6 +114,7 @@ class Header extends Component {
             if (this.readyState === 4) {
                 sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
                 sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+                // sessionStorage.setItem("first-name", that.state.firstName);
 
                 that.setState({
                     loggedIn: true,
@@ -183,6 +194,19 @@ class Header extends Component {
         this.setState({ registerPassword: e.target.value });
     }
 
+    searchRestaurantTextChangeHandler = (e) => {
+
+    }
+
+    onClickLogout = () => {
+        sessionStorage.removeItem("access-token");
+        this.setState({ loggedIn: false });
+        ReactDOM.render(<Home />, document.getElementById("root"));
+    }
+
+    onClickProfile = () => {
+        ReactDOM.render(<Profile />, document.getElementById("root"));
+    }
 
     render() {
         return (
@@ -190,13 +214,37 @@ class Header extends Component {
                 <FastfoodIcon className="fast-food-logo" />
                 <div className="search-action">
                     <SearchIcon className="header-search-icon" />
-                    <TextField className="search-restaurant-text" id="standard-basic" placeholder="Search by Restaurant Name" />
+                    <TextField className="search-restaurant-text" id="standard-basic"
+                        placeholder="Search by Restaurant Name"
+                        onChange={this.searchRestaurantTextChangeHandler}
+                    />
                 </div>
-                <div className="header-login">
-                    <Button variant="contained" color="default" startIcon={<AccountCircleIcon />} onClick={this.openModalHandler}>
-                        LOGIN
+                {!this.state.loggedIn &&
+                    <div className="header-login">
+                        <Button variant="contained" color="default" startIcon={<AccountCircleIcon />} onClick={this.openModalHandler}>
+                            LOGIN
                     </Button>
-                </div>
+                    </div>}
+
+                {this.state.loggedIn &&
+                    <div>
+                        <div style={{ color: "white", margin: "0px 20px", display: "flex", cursor: "pointer" }} aria-controls="simple-menu"
+                            aria-haspopup="true" onClick={this.handleClick}>
+                            <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > Upgrad</span>
+
+                        </div>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={this.state.anchorEl}
+                            keepMounted
+                            open={Boolean(this.state.anchorEl)}
+                            onClose={this.handleClose}
+                        >
+                            <MenuItem onClick={this.onClickProfile}>Profile</MenuItem>
+                            <MenuItem onClick={this.onClickLogout}>Logout</MenuItem>
+                        </Menu>
+                    </div>
+                }
                 <Modal
                     ariaHideApp={false}
                     isOpen={this.state.modalIsOpen}
