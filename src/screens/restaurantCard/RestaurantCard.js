@@ -6,10 +6,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-
+import { parseCategories } from '../../common/helpers/helper';
 
 const useStyles = makeStyles({
     root: {
@@ -20,12 +18,25 @@ const useStyles = makeStyles({
     },
 });
 
+// function parseCategories(categories) {
+//     categories = categories + "";
+//     let categoriesStr = "";
+//     let catArr = categories.split(',');
+//     catArr.forEach(cat => {
+//         categoriesStr += cat;
+//         categoriesStr += ", ";
+//     });
+//     categoriesStr = categoriesStr.trim();
+//     categoriesStr = categoriesStr.slice(0, -1);
+//     return categoriesStr;
+// }
+
 
 export default function RestaurantCard(props) {
     const classes = useStyles();
 
     return (
-        <div className="res-card">
+        <div className="res-card" onClick={props.onRestaurantClick}>
             <Card className={classes.root}>
                 <CardActionArea>
                     <CardMedia
@@ -42,7 +53,9 @@ export default function RestaurantCard(props) {
                             </div>
 
                             <Typography variant="body2"  >
-                                {props.restaurant.categories}
+                                {/* {props.restaurant.categories} */}
+
+                                {parseCategories(props.restaurant.categories)}
                             </Typography>
                         </CardContent>
                     </div>

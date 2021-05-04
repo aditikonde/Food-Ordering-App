@@ -1,0 +1,97 @@
+.details-body{
+    width: 100%;
+}
+
+.restaurant-info {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    width: 100%;
+    height: 225px;
+    background-color: rgb(223, 221, 221);
+}
+
+.details-img {
+    padding: 23px;
+    width: 250px;
+    height: 180px;
+}
+
+.details-img > img {
+    width: 100%;
+    height: 100%;
+}
+
+.details-resto-info{
+    width: 70%;
+}
+
+.info {
+    padding-left: 30px;
+}
+
+.row {
+    width: 100%;
+}
+
+.cat-row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.last-row {
+    display: flex;
+    width: 70% !important;
+}
+
+.details-rating {
+    width: 130px;
+    float: left;
+}
+
+.details-price{
+    margin-left: 50%;
+    width: 130px;
+}
+
+.details-rating-h5 {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 2px !important;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+    font-family:Arial, Helvetica, sans-serif;
+    letter-spacing: 0.7px;
+}
+
+.address {
+    font-size: 14px;
+}
+
+.details-resto-name{
+    padding: 33px 0px 13px 0px;
+}
+
+.details-resto-name > span{
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.det-rating-by {
+    /* font-family:Arial, Helvetica, sans-serif; */
+    margin-top: 0px;
+    display:block;
+    /* text-transform: uppercase; */
+    font-size: x-small;
+    color:  grey;
+    line-height: normal !important;
+    letter-spacing: 0.1px !important;
+}
+
+.nxt-line {
+    font-weight: bold;
+}
+
+.menu-cart-sec{}

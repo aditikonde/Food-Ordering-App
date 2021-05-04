@@ -17,6 +17,7 @@
 
 .bottom-btns {
     display: flex;
+    cursor:text;
 }
 
 .content {

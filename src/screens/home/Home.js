@@ -19,7 +19,7 @@ class Home extends Component {
         let that = this;
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                console.log(JSON.parse(this.responseText));
+                // console.log(JSON.parse(this.responseText));
                 that.setState({ restaurants: JSON.parse(this.responseText).restaurants });
             }
         });
@@ -29,6 +29,21 @@ class Home extends Component {
         xhr.send(data);
     }
 
+    restaurantClickHandler = (restaurant) => {
+        let pathStr = '/restaurant/' + restaurant.id;
+        let restaurantId = restaurant.id;
+        this.props.history.push({
+            pathname: pathStr,
+            restaurantId: restaurantId,
+            category: restaurant.categories
+        });
+
+        // let resto = { ...restaurant };
+        // this.props.history.push({
+        //     pathname: pathStr,
+        //     state: resto
+        // });
+    }
 
     render() {
         return (
@@ -36,17 +51,8 @@ class Home extends Component {
                 <Header />
                 <div className="home-page">
                     {this.state.restaurants.map(restaurant => (
-                        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                        <RestaurantCard key={restaurant.id} restaurant={restaurant} onRestaurantClick={this.restaurantClickHandler.bind(this, restaurant)} />
                     ))}
-                    {/* <RestaurantCard />
-                    <RestaurantCard />
-                    <RestaurantCard />
-                    <RestaurantCard />
-                    <RestaurantCard />
-                    <RestaurantCard />
-                    <RestaurantCard />
-                    <RestaurantCard /> */}
-
 
                 </div>
             </div>

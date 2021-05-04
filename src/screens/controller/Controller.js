@@ -10,8 +10,8 @@ class Controller extends Component {
             <Router>
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    {/* <Route exact path="/restaurant" component={Details} /> */}
-                    <Route path='/restaurant/:id' render={(props) => <Details {...props} />} />
+                    <Route exact path="/restaurant/:id" component={Details} />
+                    {/* <Route path='/restaurant/:id' render={(props) => <Details {...props} />} /> */}
                 </Switch>
             </Router>
         );
