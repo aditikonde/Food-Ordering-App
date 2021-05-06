@@ -63,7 +63,9 @@ class Header extends Component {
             invalidRegisterPassword: "displayNone",
             validRegisterContact: "displayNone",
             alreadyRegistered: "displayNone",
-            // loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+            invalidcontact: "displayNone",
+            noContact: "displayNone",
+            invalidcred: "displayNone",
             loggedIn: false,
             anchorEl: null
         }
@@ -90,6 +92,9 @@ class Header extends Component {
             validRegisterContact: "displayNone",
             alreadyRegistered: "displayNone",
             openAlert: false,
+            invalidcontact: "displayNone",
+            invalidcred: "displayNone",
+            noContact: "displayNone",
             vertical: 'bottom',
             horizontal: 'left',
         });
@@ -115,35 +120,42 @@ class Header extends Component {
         this.state.contactnum === "" ? this.setState({ contactnumRequired: "displayBlock" }) : this.setState({ contactnumRequired: "displayNone" });
         this.state.password === "" ? this.setState({ passwordRequired: "displayBlock" }) : this.setState({ passwordRequired: "displayNone" });
 
+        if (this.state.contactnum.length !== 10) {
+            this.setState({ invalidcontact: "displayBlock", invalidcred: "displayNone", noContact: "displayNone" });
+            return;
+        }
         let dataLogin = null;
         let xhrLogin = new XMLHttpRequest();
         let that = this;
         xhrLogin.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+            let resp = JSON.parse(this.responseText)
+            if (this.readyState === 4 && xhrLogin.status === 200) {
+                sessionStorage.setItem("uuid", resp.id);
                 sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
-                // sessionStorage.setItem("first-name", that.state.firstName);
-
                 that.setState({
                     loggedIn: true,
-                    openAlert: true
+                    openAlert: true,
+                    firstName: resp.first_name
                 });
 
-                // that.closeModalHandler();
+                that.closeModalHandler();
             }
+            console.log(JSON.parse(this.responseText));
+            if (JSON.parse(this.responseText).message === "This contact number has not been registered!")
+                that.setState({ noContact: "displayBlock", invalidcontact: "displayNone", invalidcred: "displayNone" })
+            else if (JSON.parse(this.responseText).message === "Invalid Credentials")
+                that.setState({ invalidcred: "displayBlock", invalidcontact: "displayNone", noContact: "displayNone" })
         });
 
         xhrLogin.open("POST", "http://localhost:8080/api/customer/login");
         xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.contactnum + ":" + this.state.password));
         xhrLogin.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-        xhrLogin.setRequestHeader("Cache-Control", "no-cache");
         xhrLogin.send(dataLogin);
-        that.closeModalHandler();
+
     }
 
 
     registerClickHandler = (event) => {
-        // sessionStorage.removeItem("access-token");//remove this after logout implementation
         this.state.firstName === "" ? this.setState({ firstNameRequired: "displayBlock" }) : this.setState({ firstNameRequired: "displayNone" });
         this.state.email === "" ? this.setState({ emailRequired: "displayBlock" }) : this.setState({ emailRequired: "displayNone" });
         this.state.registerContact === "" ? this.setState({ registerContactRequired: "displayBlock" }) : this.setState({ registerContactRequired: "displayNone" });
@@ -306,7 +318,7 @@ class Header extends Component {
                     <div>
                         <div style={{ color: "white", margin: "0px 20px", display: "flex", cursor: "pointer" }} aria-controls="simple-menu"
                             aria-haspopup="true" onClick={this.handleClick}>
-                            <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > Upgrad</span>
+                            <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > {this.state.firstName}</span>
 
                         </div>
                         <Menu
@@ -338,6 +350,10 @@ class Header extends Component {
                                 <Input id="contactnum" type="text" onChange={this.contactnumChangeHandler} />
                                 <FormHelperText className={this.state.contactnumRequired}><span className="red" >required</span>
                                 </FormHelperText>
+                                <FormHelperText className={this.state.invalidcontact}><span className="red" >Invalid Contact</span>
+                                </FormHelperText>
+                                <FormHelperText className={this.state.noContact}><span className="red" >This contact number has not been registered!</span>
+                                </FormHelperText>
                             </FormControl>
                             <br />
                             <br />
@@ -345,6 +361,8 @@ class Header extends Component {
                                 <InputLabel htmlFor="password">Password</InputLabel>
                                 <Input id="password" type="password" onChange={this.inputPasswordChangeHandler} />
                                 <FormHelperText className={this.state.passwordRequired}><span className="red" >required</span>
+                                </FormHelperText>
+                                <FormHelperText className={this.state.invalidcred}><span className="red" >Invalid Credentials</span>
                                 </FormHelperText>
                             </FormControl>
                             <br />
