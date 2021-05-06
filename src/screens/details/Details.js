@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import './Details.css';
 import Header from '../../common/header/Header';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import { parseCategories } from '../../common/helpers/helper';
+import { currencyFormat } from '../../common/helpers/helper';
+
 
 class Details extends Component {
 
@@ -10,7 +17,9 @@ class Details extends Component {
         this.state = {
             restaurant: {},
             address: {},
-            categories: []
+            categories: [],
+            cartAmount: 0,
+            cartItemNum: 0,
         }
     }
 
@@ -78,7 +87,24 @@ class Details extends Component {
                         </div>
                     </div>
                     <div className="menu-cart-sec">
-                        {console.log(this.state.categories)}
+                        <div className="details-catergories">
+                            {console.log(this.state.categories)}
+                        </div>
+                        <div className="details-cart">
+                            <Card className="my-cart" variant="outlined">
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2" className="cart-header" ><i class="fa fa-shopping-cart" aria-hidden="true"></i><div className="cart-item-count"><span>{this.state.cartItemNum}</span></div><span className="cart-title">My Cart</span>
+                                    </Typography>
+
+                                    <Typography className="cart-total-amt" ><span className="cart-total">Total Amount</span>
+                                        <span className="cart-amount"><i className="fa fa-inr" aria-hidden="true"></i>{currencyFormat(this.state.cartAmount)} </span>
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button variant="contained" style={{ width: '100%' }} color="primary" >Checkout</Button>
+                                </CardActions>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </div>

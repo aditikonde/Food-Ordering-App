@@ -10,3 +10,7 @@ export function parseCategories(categories) {
     categoriesStr = categoriesStr.slice(0, -1);
     return categoriesStr;
 }
+
+export function currencyFormat(num) {
+    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
