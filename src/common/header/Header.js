@@ -54,11 +54,15 @@ class Header extends Component {
             lastName: "",
             emailRequired: "displayNone",
             email: "",
+            invalidEmail: "displayNone",
             registerContactRequired: "displayNone",
             registerContact: "",
             registerPasswordRequired: "displayNone",
             registerPassword: "",
             registrationSuccess: false,
+            invalidRegisterPassword: "displayNone",
+            validRegisterContact: "displayNone",
+            alreadyRegistered: "displayNone",
             // loggedIn: sessionStorage.getItem("access-token") == null ? false : true
             loggedIn: false,
             anchorEl: null
@@ -78,9 +82,13 @@ class Header extends Component {
             password: "",
             passwordRequired: "displayNone",
             firstNameRequired: "displayNone",
+            invalidRegisterPassword: "displayNone",
             emailRequired: "displayNone",
+            invalidEmail: "displayNone",
             registerPasswordRequired: "displayNone",
             registerContactRequired: "displayNone",
+            validRegisterContact: "displayNone",
+            alreadyRegistered: "displayNone",
             openAlert: false,
             vertical: 'bottom',
             horizontal: 'left',
@@ -135,11 +143,25 @@ class Header extends Component {
 
 
     registerClickHandler = (event) => {
-        sessionStorage.removeItem("access-token");//remove this after logout implementation
+        // sessionStorage.removeItem("access-token");//remove this after logout implementation
         this.state.firstName === "" ? this.setState({ firstNameRequired: "displayBlock" }) : this.setState({ firstNameRequired: "displayNone" });
         this.state.email === "" ? this.setState({ emailRequired: "displayBlock" }) : this.setState({ emailRequired: "displayNone" });
         this.state.registerContact === "" ? this.setState({ registerContactRequired: "displayBlock" }) : this.setState({ registerContactRequired: "displayNone" });
         this.state.registerPassword === "" ? this.setState({ registerPasswordRequired: "displayBlock" }) : this.setState({ registerPasswordRequired: "displayNone" });
+
+        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+
+        this.state.email && !pattern.test(this.state.email) ? this.setState({ invalidEmail: "displayBlock" }) : this.setState({ invalidEmail: "displayNone" });
+
+        if (this.state.registerPassword) {
+            if (this.isValidPassword(this.state.registerPassword))
+                this.setState({ invalidRegisterPassword: "displayNone" })
+            else
+                this.setState({ invalidRegisterPassword: "displayBlock" })
+        }
+
+        this.state.registerContact && this.state.registerContact.length < 10 ? this.setState({ validRegisterContact: "displayBlock" }) :
+            this.setState({ validRegisterContact: "displayNone" })
 
         let data = JSON.stringify({
             contact_number: this.state.registerContact,
@@ -151,13 +173,17 @@ class Header extends Component {
         let xhr = new XMLHttpRequest();
         let that = this;
         xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
+            if (this.readyState === 4 && xhr.status === 201) {
+
                 that.setState({
                     registrationSuccess: true,
                     openAlert: true,
                     value: 0
                 });
             }
+            console.log(this.responseText);
+            if (JSON.parse(this.responseText).message === "This contact number is already registered! Try other contact number.")
+                that.setState({ alreadyRegistered: "displayBlock" })
         });
         xhr.open("POST", "http://localhost:8080/api/customer/signup");
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -165,6 +191,40 @@ class Header extends Component {
         xhr.send(data);
     }
 
+    isValidPassword = (pwd) => {
+
+        let containsNumber = false;
+        let containsSpecialChar = false;
+        let containsSmallAlphabet = false;
+        let containsBigAlphabet = false;
+        for (let i = 0; i < pwd.length; i++) {
+            if (pwd.charAt(i) >= 'a' && pwd.charAt(i) <= 'z') {
+                containsSmallAlphabet = true;
+                break;
+            }
+        }
+        for (let i = 0; i < pwd.length; i++) {
+            if (pwd.charAt(i) >= 'A' && pwd.charAt(i) <= 'Z') {
+                containsBigAlphabet = true;
+                break;
+            }
+        }
+        for (let i = 0; i < pwd.length; i++) {
+            if ((pwd.charAt(i) >= '0' && pwd.charAt(i) <= '9')) {
+                containsNumber = true;
+                break;
+            }
+        }
+        for (let i = 0; i < pwd.length; i++) {
+            if (!(pwd.charAt(i) >= '0' && pwd.charAt(i) <= '9') && !((pwd.charAt(i) >= 'a' && pwd.charAt(i) <= 'z') ||
+                (pwd.charAt(i) >= 'A' && pwd.charAt(i) <= 'Z'))) {
+                containsSpecialChar = true;
+                break;
+            }
+        }
+        return containsNumber && containsSpecialChar && containsBigAlphabet && containsSmallAlphabet;
+
+    }
 
     contactnumChangeHandler = (e) => {
         this.setState({ contactnum: e.target.value });
@@ -194,9 +254,25 @@ class Header extends Component {
         this.setState({ registerPassword: e.target.value });
     }
 
-    searchRestaurantTextChangeHandler = (e) => {
+    // searchRestaurantTextChangeHandler = (e) => {
 
-    }
+    //     if(e.target.value !== "")
+    //     {
+    //         let that = this;
+    //         let dataFilter = null;
+    //         let xhrFilter = new XMLHttpRequest();
+    //         xhrFilter.addEventListener("readystatechange", function () {
+    //             if (this.readyState === 4) {
+    //                 that.setState({
+    //                 });
+    //             }
+    //         });
+
+    //         xhrFilter.open("GET", "http://localhost:8080/api/restaurant/name/"+e.target.value);
+    //         xhrFilter.setRequestHeader("Cache-Control", "no-cache");
+    //         xhrFilter.send(dataFilter);
+    //     }
+    // }
 
     onClickLogout = () => {
         sessionStorage.removeItem("access-token");
@@ -289,11 +365,9 @@ class Header extends Component {
                             </FormControl>
                             <br />
                             <br />
-                            <FormControl required >
+                            <FormControl >
                                 <InputLabel htmlFor="lastName">Last Name</InputLabel>
                                 <Input id="lastName" type="lastName" onChange={this.inputLastnameChangeHandler} />
-                                <FormHelperText className={this.state.lastNameRequired}><span className="red" >required</span>
-                                </FormHelperText>
                             </FormControl>
                             <br />
                             <br />
@@ -302,13 +376,18 @@ class Header extends Component {
                                 <Input id="email" type="email" onChange={this.inputEmailChangeHandler} />
                                 <FormHelperText className={this.state.emailRequired}><span className="red" >required</span>
                                 </FormHelperText>
+                                <FormHelperText className={this.state.invalidEmail}><span className="red" >Invalid Email</span>
+                                </FormHelperText>
                             </FormControl>
                             <br />
                             <br />
-                            <FormControl required >
+                            <FormControl required > {/*set width for invalid password*/}
                                 <InputLabel htmlFor="passsword">Password</InputLabel>
                                 <Input id="password" type="password" onChange={this.registerPasswordChangeHandler} />
                                 <FormHelperText className={this.state.registerPasswordRequired}><span className="red" >required</span>
+                                </FormHelperText>
+                                <FormHelperText className={this.state.invalidRegisterPassword}><span className="red" >
+                                    Password must contain at least one capital letter, one small letter, one number, and one special character</span>
                                 </FormHelperText>
                             </FormControl>
                             <br />
@@ -317,6 +396,12 @@ class Header extends Component {
                                 <InputLabel htmlFor="registerContact">Contact No.</InputLabel>
                                 <Input id="registerContact" type="number" onChange={this.inputRegisterContactChangeHandler} />
                                 <FormHelperText className={this.state.registerContactRequired}><span className="red" >required</span>
+                                </FormHelperText>
+                                <FormHelperText className={this.state.validRegisterContact}><span className="red" >
+                                    Contact No. must contain only numbers and must be 10 digits long</span>
+                                </FormHelperText>
+                                <FormHelperText className={this.state.alreadyRegistered}><span className="red" >
+                                    This contact number is already registered! Try other contact number.</span>
                                 </FormHelperText>
                             </FormControl>
                             <br />
