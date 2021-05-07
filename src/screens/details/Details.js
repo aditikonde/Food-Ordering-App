@@ -31,7 +31,7 @@ class Details extends Component {
         let id = this.props.history.location.restaurantId;
 
         let data = null;
-        let url = "http://localhost:8080/api/api/restaurant/" + id;
+        let url = "http://localhost:8080/api/restaurant/" + id;
         let xhr = new XMLHttpRequest();
         let that = this;
         xhr.addEventListener("readystatechange", function () {
@@ -49,6 +49,13 @@ class Details extends Component {
         xhr.open("GET", url);
         xhr.send(data);
 
+    }
+
+    checkoutClickHandler = () => {
+        let pathStr = '/checkout';
+        this.props.history.push({
+            pathname: pathStr,
+        });
     }
 
     render() {
@@ -101,7 +108,9 @@ class Details extends Component {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button variant="contained" style={{ width: '100%' }} color="primary" >Checkout</Button>
+                                    <Button variant="contained" style={{ width: '100%' }} color="primary"
+                                        onClick={this.checkoutClickHandler}
+                                    >Checkout</Button>
                                 </CardActions>
                             </Card>
                         </div>
