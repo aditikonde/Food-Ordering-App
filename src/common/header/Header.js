@@ -4,7 +4,6 @@ import 'typeface-roboto';
 import "./Header.css";
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { FormControl, FormHelperText, IconButton, Input, InputLabel, Menu, MenuItem, Snackbar, Tab, Tabs, Typography } from '@material-ui/core';
@@ -302,10 +301,10 @@ class Header extends Component {
                 <FastfoodIcon className="fast-food-logo" />
                 <div className="search-action">
                     <SearchIcon className="header-search-icon" />
-                    <TextField className="search-restaurant-text" id="standard-basic"
+                    <Input className="search-restaurant-text"
                         placeholder="Search by Restaurant Name"
-                        onChange={this.searchRestaurantTextChangeHandler}
-                    />
+                        onChange={this.props.onSearchTextChange}
+                    ></Input>
                 </div>
                 {!this.state.loggedIn &&
                     <div className="header-login">

@@ -8,7 +8,8 @@ class Home extends Component {
     constructor() {
         super();
         this.state = {
-            restaurants: [{}]
+            restaurants: [{}],
+            allRestaurants: [{}]
         }
     }
 
@@ -20,7 +21,10 @@ class Home extends Component {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 // console.log(JSON.parse(this.responseText));
-                that.setState({ restaurants: JSON.parse(this.responseText).restaurants });
+                that.setState({
+                    allRestaurants: JSON.parse(this.responseText).restaurants,
+                    restaurants: JSON.parse(this.responseText).restaurants
+                });
             }
         });
 
@@ -45,15 +49,37 @@ class Home extends Component {
         // });
     }
 
+    onSearchTextChange = (e) => {
+        let search = e.target.value;
+        if (search === "") {
+            this.setState({ restaurants: this.state.allRestaurants })
+        }
+        else {
+            let data = null;
+            let url = "http://localhost:8080/api/restaurant/name/" + search;
+            let xhr = new XMLHttpRequest();
+            let that = this;
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    that.setState({ restaurants: JSON.parse(this.responseText).restaurants });
+                }
+            });
+            xhr.open("GET", url);
+            xhr.send(data);
+        }
+    }
+
     render() {
         return (
             <div className="home-container">
-                <Header />
+                <Header onSearchTextChange={this.onSearchTextChange} />
                 <div className="home-page">
-                    {this.state.restaurants.map(restaurant => (
+                    {this.state.restaurants && this.state.restaurants.map(restaurant => (
                         <RestaurantCard key={restaurant.id} restaurant={restaurant} onRestaurantClick={this.restaurantClickHandler.bind(this, restaurant)} />
                     ))}
-
+                    {
+                        !this.state.restaurants && <div>No restaurant with the given name.</div>
+                    }
                 </div>
             </div>
         );
