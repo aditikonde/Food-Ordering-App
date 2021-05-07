@@ -265,26 +265,6 @@ class Header extends Component {
         this.setState({ registerPassword: e.target.value });
     }
 
-    // searchRestaurantTextChangeHandler = (e) => {
-
-    //     if(e.target.value !== "")
-    //     {
-    //         let that = this;
-    //         let dataFilter = null;
-    //         let xhrFilter = new XMLHttpRequest();
-    //         xhrFilter.addEventListener("readystatechange", function () {
-    //             if (this.readyState === 4) {
-    //                 that.setState({
-    //                 });
-    //             }
-    //         });
-
-    //         xhrFilter.open("GET", "http://localhost:8080/api/restaurant/name/"+e.target.value);
-    //         xhrFilter.setRequestHeader("Cache-Control", "no-cache");
-    //         xhrFilter.send(dataFilter);
-    //     }
-    // }
-
     onClickLogout = () => {
         sessionStorage.removeItem("access-token");
         this.setState({ loggedIn: false });
@@ -298,7 +278,7 @@ class Header extends Component {
     render() {
         return (
             <div className="header-container">
-                <FastfoodIcon className="fast-food-logo" />
+                <div><FastfoodIcon className="fast-food-logo" /></div>
                 <div className="search-action">
                     <SearchIcon className="header-search-icon" />
                     <Input className="search-restaurant-text"
@@ -306,128 +286,130 @@ class Header extends Component {
                         onChange={this.props.onSearchTextChange}
                     ></Input>
                 </div>
-                {!this.state.loggedIn &&
-                    <div className="header-login">
-                        <Button variant="contained" color="default" startIcon={<AccountCircleIcon />} onClick={this.openModalHandler}>
-                            LOGIN
+                <div>
+                    {!this.state.loggedIn &&
+                        <div className="header-login">
+                            <Button variant="contained" color="default" startIcon={<AccountCircleIcon />} onClick={this.openModalHandler}>
+                                LOGIN
                     </Button>
-                    </div>}
+                        </div>}
 
-                {this.state.loggedIn &&
-                    <div>
-                        <div style={{ color: "white", margin: "0px 20px", display: "flex", cursor: "pointer" }} aria-controls="simple-menu"
-                            aria-haspopup="true" onClick={this.handleClick}>
-                            <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > {this.state.firstName}</span>
+                    {this.state.loggedIn &&
+                        <div>
+                            <div style={{ color: "white", margin: "0px 20px", display: "flex", cursor: "pointer" }} aria-controls="simple-menu"
+                                aria-haspopup="true" onClick={this.handleClick}>
+                                <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > {this.state.firstName}</span>
 
+                            </div>
+                            <Menu
+                                id="simple-menu"
+                                anchorEl={this.state.anchorEl}
+                                keepMounted
+                                open={Boolean(this.state.anchorEl)}
+                                onClose={this.handleClose}
+                            >
+                                <MenuItem onClick={this.onClickProfile}>Profile</MenuItem>
+                                <MenuItem onClick={this.onClickLogout}>Logout</MenuItem>
+                            </Menu>
                         </div>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={this.state.anchorEl}
-                            keepMounted
-                            open={Boolean(this.state.anchorEl)}
-                            onClose={this.handleClose}
-                        >
-                            <MenuItem onClick={this.onClickProfile}>Profile</MenuItem>
-                            <MenuItem onClick={this.onClickLogout}>Logout</MenuItem>
-                        </Menu>
-                    </div>
-                }
-                <Modal
-                    ariaHideApp={false}
-                    isOpen={this.state.modalIsOpen}
-                    contentLabel="Login"
-                    onRequestClose={this.closeModalHandler}
-                    style={customStyles}>
-                    <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
-                        <Tab label="Login" />
-                        <Tab label="Signup" />
-                    </Tabs>
-                    {this.state.value === 0 &&
-                        <TabContainer >
-                            <FormControl required >
-                                <InputLabel htmlFor="contactnum" >Contact No.</InputLabel>
-                                <Input id="contactnum" type="text" onChange={this.contactnumChangeHandler} />
-                                <FormHelperText className={this.state.contactnumRequired}><span className="red" >required</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.invalidcontact}><span className="red" >Invalid Contact</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.noContact}><span className="red" >This contact number has not been registered!</span>
-                                </FormHelperText>
-                            </FormControl>
-                            <br />
-                            <br />
-                            <FormControl required >
-                                <InputLabel htmlFor="password">Password</InputLabel>
-                                <Input id="password" type="password" onChange={this.inputPasswordChangeHandler} />
-                                <FormHelperText className={this.state.passwordRequired}><span className="red" >required</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.invalidcred}><span className="red" >Invalid Credentials</span>
-                                </FormHelperText>
-                            </FormControl>
-                            <br />
-                            <br />
-                            <Button variant="contained" color="primary" onClick={this.loginClickHandler}>
-                                Login
+                    }
+                    <Modal
+                        ariaHideApp={false}
+                        isOpen={this.state.modalIsOpen}
+                        contentLabel="Login"
+                        onRequestClose={this.closeModalHandler}
+                        style={customStyles}>
+                        <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
+                            <Tab label="Login" />
+                            <Tab label="Signup" />
+                        </Tabs>
+                        {this.state.value === 0 &&
+                            <TabContainer >
+                                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="contactnum" >Contact No.</InputLabel>
+                                    <Input id="contactnum" type="text" onChange={this.contactnumChangeHandler} />
+                                    <FormHelperText className={this.state.contactnumRequired}><span className="red" >required</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.invalidcontact}><span className="red" >Invalid Contact</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.noContact}><span className="red" >This contact number has not been registered!</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <br />
+                                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="password">Password</InputLabel>
+                                    <Input id="password" type="password" onChange={this.inputPasswordChangeHandler} />
+                                    <FormHelperText className={this.state.passwordRequired}><span className="red" >required</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.invalidcred}><span className="red" >Invalid Credentials</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <br />
+                                <Button variant="contained" color="primary" onClick={this.loginClickHandler}>
+                                    Login
                         </Button>
-                        </TabContainer>}
+                            </TabContainer>}
 
 
-                    {this.state.value === 1 &&
-                        <TabContainer >
-                            <FormControl required >
-                                <InputLabel htmlFor="firstName" >First Name</InputLabel>
-                                <Input id="firstName" type="text" onChange={this.inputFirstnameChangeHandler} />
-                                <FormHelperText className={this.state.firstNameRequired}><span className="red" >required</span>
-                                </FormHelperText>
-                            </FormControl>
-                            <br />
-                            <br />
-                            <FormControl >
-                                <InputLabel htmlFor="lastName">Last Name</InputLabel>
-                                <Input id="lastName" type="lastName" onChange={this.inputLastnameChangeHandler} />
-                            </FormControl>
-                            <br />
-                            <br />
-                            <FormControl required >
-                                <InputLabel htmlFor="email" >Email</InputLabel>
-                                <Input id="email" type="email" onChange={this.inputEmailChangeHandler} />
-                                <FormHelperText className={this.state.emailRequired}><span className="red" >required</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.invalidEmail}><span className="red" >Invalid Email</span>
-                                </FormHelperText>
-                            </FormControl>
-                            <br />
-                            <br />
-                            <FormControl required > {/*set width for invalid password*/}
-                                <InputLabel htmlFor="passsword">Password</InputLabel>
-                                <Input id="password" type="password" onChange={this.registerPasswordChangeHandler} />
-                                <FormHelperText className={this.state.registerPasswordRequired}><span className="red" >required</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.invalidRegisterPassword}><span className="red" >
-                                    Password must contain at least one capital letter, one small letter, one number, and one special character</span>
-                                </FormHelperText>
-                            </FormControl>
-                            <br />
-                            <br />
-                            <FormControl required >
-                                <InputLabel htmlFor="registerContact">Contact No.</InputLabel>
-                                <Input id="registerContact" type="number" onChange={this.inputRegisterContactChangeHandler} />
-                                <FormHelperText className={this.state.registerContactRequired}><span className="red" >required</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.validRegisterContact}><span className="red" >
-                                    Contact No. must contain only numbers and must be 10 digits long</span>
-                                </FormHelperText>
-                                <FormHelperText className={this.state.alreadyRegistered}><span className="red" >
-                                    This contact number is already registered! Try other contact number.</span>
-                                </FormHelperText>
-                            </FormControl>
-                            <br />
-                            <br />
-                            <Button variant="contained" color="primary" onClick={this.registerClickHandler}>
-                                Signup
+                        {this.state.value === 1 &&
+                            <TabContainer >
+                                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="firstName" >First Name</InputLabel>
+                                    <Input id="firstName" type="text" onChange={this.inputFirstnameChangeHandler} />
+                                    <FormHelperText className={this.state.firstNameRequired}><span className="red" >required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <br />
+                                <FormControl style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="lastName">Last Name</InputLabel>
+                                    <Input id="lastName" type="lastName" onChange={this.inputLastnameChangeHandler} />
+                                </FormControl>
+                                <br />
+                                <br />
+                                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="email" >Email</InputLabel>
+                                    <Input id="email" type="email" onChange={this.inputEmailChangeHandler} />
+                                    <FormHelperText className={this.state.emailRequired}><span className="red" >required</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.invalidEmail}><span className="red" >Invalid Email</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <br />
+                                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="passsword">Password</InputLabel>
+                                    <Input id="password" type="password" onChange={this.registerPasswordChangeHandler} />
+                                    <FormHelperText className={this.state.registerPasswordRequired}><span className="red" >required</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.invalidRegisterPassword}><span className="red" >
+                                        Password must contain at least one capital letter, one small letter, one number, and one special character</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <br />
+                                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                                    <InputLabel htmlFor="registerContact">Contact No.</InputLabel>
+                                    <Input id="registerContact" type="number" onChange={this.inputRegisterContactChangeHandler} />
+                                    <FormHelperText className={this.state.registerContactRequired}><span className="red" >required</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.validRegisterContact}><span className="red" >
+                                        Contact No. must contain only numbers and must be 10 digits long</span>
+                                    </FormHelperText>
+                                    <FormHelperText className={this.state.alreadyRegistered}><span className="red" >
+                                        This contact number is already registered! Try other contact number.</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br />
+                                <br />
+                                <Button variant="contained" color="primary" onClick={this.registerClickHandler}>
+                                    Signup
                         </Button>
-                        </TabContainer>}
-                </Modal>
+                            </TabContainer>}
+                    </Modal>
+                </div>
                 { this.state.loggedIn && <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                     open={this.state.openAlert}
