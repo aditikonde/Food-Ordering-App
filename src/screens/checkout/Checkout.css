@@ -32,3 +32,15 @@
     /* padding-top: 20px; */
     width: 25%;
 }
+
+.displayNone {
+  display: none;
+}
+
+.displayBlock {
+  display: block;
+}
+
+.red {
+  color: red;
+}
