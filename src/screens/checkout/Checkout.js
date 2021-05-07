@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import { AppBar, Box, FormControl, FormControlLabel, FormLabel, GridList, GridListTile, GridListTileBar, IconButton, Radio, RadioGroup, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Box, FormControl, FormControlLabel, FormHelperText, FormLabel, GridList, GridListTile, GridListTileBar, IconButton, Input, InputLabel, Radio, RadioGroup, Tab, Tabs } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
 
 function TabPanel(props) {
@@ -47,7 +47,17 @@ class Checkout extends Component {
       steps: ['Delivery', 'Payment'],
       value: "cod",
       tabvalue: 0,
-      savedAddresses: [{}]
+      savedAddresses: [{}],
+      flat: "",
+      locality: "",
+      city: "",
+      state: "",
+      pin: "",
+      flatRequired: "displayNone",
+      localityRequired: "displayNone",
+      cityRequired: "displayNone",
+      stateRequired: "displayNone",
+      pinRequired: "displayNone",
     }
   };
 
@@ -102,6 +112,55 @@ class Checkout extends Component {
 
   }
 
+  flatChangeHandler = (e) => {
+    this.setState({ flat: e.target.value })
+  }
+
+  localityChangeHandler = (e) => {
+    this.setState({ locality: e.target.value })
+  }
+
+  cityChangeHandler = (e) => {
+    this.setState({ city: e.target.value })
+  }
+
+  stateChangeHandler = (e) => {
+    this.setState({ state: e.target.value })
+  }
+
+  pinChangeHandler = (e) => {
+    this.setState({ pin: e.target.value })
+  }
+
+  newAddrClickHandler = () => {
+    this.state.flat === "" ? this.setState({ flatRequired: "displayBlock" }) : this.setState({ flatRequired: "displayNone" });
+    this.state.locality === "" ? this.setState({ localityRequired: "displayBlock" }) : this.setState({ localityRequired: "displayNone" });
+    this.state.city === "" ? this.setState({ cityRequired: "displayBlock" }) : this.setState({ cityRequired: "displayNone" });
+    this.state.state === "" ? this.setState({ stateRequired: "displayBlock" }) : this.setState({ stateRequired: "displayNone" });
+    this.state.pin === "" ? this.setState({ pinRequired: "displayBlock" }) : this.setState({ pinRequired: "displayNone" });
+
+    let data = JSON.stringify({
+      city: this.state.city,
+      flat_building_name: this.state.flat,
+      locality: this.state.locality,
+      pincode: this.state.pin,
+      state_uuid: "c860e78a-a29b-11e8-9a3a-720006ceb890"
+    });
+    let xhr = new XMLHttpRequest();
+    let that = this;
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+        //reload newly added address
+      }
+    });
+    xhr.open("POST", "http://localhost:8080/api/address");
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.setRequestHeader('authorization', "Bearer " + sessionStorage.getItem("access-token"));
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.send(data);
+  }
+
   getStepContent(step) {
     switch (step) {
       case 0:
@@ -139,7 +198,50 @@ class Checkout extends Component {
                 </div>}
               </TabPanel>
               <TabPanel value={this.state.tabvalue} index={1}>
-                New address
+                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                  <InputLabel htmlFor="flat" >Flat/Building No.</InputLabel>
+                  <Input id="flat" type="text" onChange={this.flatChangeHandler} />
+                  <FormHelperText className={this.state.flatRequired}><span className="red" >required</span>
+                  </FormHelperText>
+
+                </FormControl>
+                <br />
+                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                  <InputLabel htmlFor="locality">Locality</InputLabel>
+                  <Input id="locality" onChange={this.localityChangeHandler} />
+                  <FormHelperText className={this.state.localityRequired}><span className="red" >required</span>
+                  </FormHelperText>
+
+                </FormControl>
+                <br />
+                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                  <InputLabel htmlFor="city">City</InputLabel>
+                  <Input id="city" onChange={this.cityChangeHandler} />
+                  <FormHelperText className={this.state.cityRequired}><span className="red" >required</span>
+                  </FormHelperText>
+
+                </FormControl>
+                <br />
+                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                  <InputLabel htmlFor="state">State</InputLabel>
+                  <Input id="state" onChange={this.stateChangeHandler} />
+                  <FormHelperText className={this.state.stateRequired}><span className="red" >required</span>
+                  </FormHelperText>
+
+                </FormControl>
+                <br />
+                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                  <InputLabel htmlFor="pin">Pincode</InputLabel>
+                  <Input id="pin" onChange={this.pinChangeHandler} />
+                  <FormHelperText className={this.state.pinRequired}><span className="red" >required</span>
+                  </FormHelperText>
+
+                </FormControl>
+                <br />
+                <br />
+                <Button variant="contained" color="primary" onClick={this.newAddrClickHandler}>
+                  Save
+                        </Button>
               </TabPanel>
             </div>
             <div className="right">
