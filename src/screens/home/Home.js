@@ -72,7 +72,7 @@ class Home extends Component {
     render() {
         return (
             <div className="home-container">
-                <Header onSearchTextChange={this.onSearchTextChange} />
+                <Header onSearchTextChange={this.onSearchTextChange} isHomePage={true} />
                 <div className="home-page">
                     {this.state.restaurants && this.state.restaurants.map(restaurant => (
                         <RestaurantCard key={restaurant.id} restaurant={restaurant} onRestaurantClick={this.restaurantClickHandler.bind(this, restaurant)} />

@@ -279,15 +279,15 @@ class Header extends Component {
         return (
             <div className="header-container">
                 <div><FastfoodIcon className="fast-food-logo" /></div>
-                <div className="search-action">
+                {this.props.isHomePage && <div className="search-action">
                     <SearchIcon className="header-search-icon" />
                     <Input className="search-restaurant-text"
                         placeholder="Search by Restaurant Name"
                         onChange={this.props.onSearchTextChange}
                     ></Input>
-                </div>
+                </div>}
                 <div>
-                    {!this.state.loggedIn &&
+                    {!this.state.loggedIn && this.props.isHomePage &&
                         <div className="header-login">
                             <Button variant="contained" color="default" startIcon={<AccountCircleIcon />} onClick={this.openModalHandler}>
                                 LOGIN
