@@ -31,7 +31,7 @@ class Details extends Component {
         let id = this.props.history.location.restaurantId;
 
         let data = null;
-        let url = "http://localhost:8080/api/api/restaurant/" + id;
+        let url = "http://localhost:8080/api/restaurant/" + id;
         let xhr = new XMLHttpRequest();
         let that = this;
         xhr.addEventListener("readystatechange", function () {
