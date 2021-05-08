@@ -10,6 +10,8 @@ import { parseCategories } from '../../common/helpers/helper';
 import { currencyFormat } from '../../common/helpers/helper';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import AddIcon from '@material-ui/icons/Add';
 
 
 class Details extends Component {
@@ -23,7 +25,6 @@ class Details extends Component {
             cartAmount: 0,
             cartItemNum: 0,
             snackOpen: false,
-            snackMsg: "",
             snackPosition: {
                 vertical: 'bottom',
                 horizontal: 'left'
@@ -116,6 +117,40 @@ class Details extends Component {
                     <div className="menu-cart-sec">
                         <div className="details-catergories">
                             {console.log(this.state.categories)}
+                            {this.state.categories.map((category) => (
+                                <div className="all-categories">
+                                    <span className="cat-name">{category.category_name}</span>
+                                    <Divider light className="divider" />
+                                    <ul className="details-item-list">
+                                        {category.item_list.map((item) => (
+
+                                            <li>
+                                                <div className="item-row">
+                                                    <div style={{ width: '5%' }}>
+                                                        <i className="fa fa-circle" style={{ color: item.item_type == 'VEG' ? 'green' : 'red' }} aria-hidden="true"></i>
+                                                    </div>
+                                                    <div style={{ width: '55%' }}>
+                                                        <span className="item-name">{item.item_name}</span>
+                                                    </div>
+                                                    <div style={{ width: '25%', float: 'right' }}>
+                                                        <span className="item-price"><i className="fa fa-inr" aria-hidden="true"></i> {currencyFormat(item.price)}</span>
+                                                    </div>
+                                                    <div style={{ width: '15%' }}>
+                                                        <IconButton
+                                                            style={{ padding: '0px', float: 'right' }}
+                                                            key="close"
+                                                            aria-label="close"
+                                                            color="inherit"
+                                                            onClick={this.handleSnackBarClose}><AddIcon />
+                                                        </IconButton>
+                                                    </div>
+                                                </div>
+
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
                         </div>
                         <div className="details-cart">
                             <Card className="my-cart" variant="outlined">
