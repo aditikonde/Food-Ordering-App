@@ -73,7 +73,7 @@ class Details extends Component {
 
     checkoutClickHandler = () => {
 
-        let pathStr = '/checkout';
+        let pathStr = sessionStorage.getItem("access-token") === null ? '/' : '/checkout';
         this.props.history.push({
             pathname: pathStr,
         });
@@ -166,7 +166,6 @@ class Details extends Component {
                                     <Button variant="contained" style={{ width: '100%' }} color="primary"
                                         onClick={this.state.cartItemNum == 0 ? this.handleSnackBarOpen :
                                             this.checkoutClickHandler}
-                                    // onClick={this.checkoutClickHandler}
                                     >Checkout</Button>
 
                                     <div>
