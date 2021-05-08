@@ -44,3 +44,11 @@
 .red {
   color: red;
 }
+
+.selectedGrid {
+  border: 2px solid #f50057;
+}
+
+.selectedGridIcon {
+  color:green;
+}
