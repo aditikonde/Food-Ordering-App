@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import Home from '../../screens/home/Home';
 import ReactDOM from 'react-dom';
 import Profile from '../../screens/profile/Profile';
+import { Link } from 'react-router-dom';
 
 const customStyles = {
     content: {
@@ -278,7 +279,9 @@ class Header extends Component {
     render() {
         return (
             <div className="header-container">
-                <div><FastfoodIcon className="fast-food-logo" /></div>
+                <Link to='/'>
+                    <div><FastfoodIcon className="fast-food-logo" /></div>
+                </Link>
                 {this.props.isHomePage && <div className="search-action">
                     <SearchIcon className="header-search-icon" />
                     <Input className="search-restaurant-text"
