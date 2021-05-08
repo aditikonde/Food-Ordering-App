@@ -66,7 +66,7 @@ class Header extends Component {
             invalidcontact: "displayNone",
             noContact: "displayNone",
             invalidcred: "displayNone",
-            loggedIn: false,
+            loggedIn: sessionStorage.getItem("access-token") === null ? false : true,
             anchorEl: null
         }
     }
@@ -128,10 +128,11 @@ class Header extends Component {
         let xhrLogin = new XMLHttpRequest();
         let that = this;
         xhrLogin.addEventListener("readystatechange", function () {
-            let resp = JSON.parse(this.responseText)
+            let resp = JSON.parse(this.responseText);
             if (this.readyState === 4 && xhrLogin.status === 200) {
                 sessionStorage.setItem("uuid", resp.id);
                 sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+                sessionStorage.setItem("firstname", resp.first_name)
                 that.setState({
                     loggedIn: true,
                     openAlert: true,
@@ -268,12 +269,8 @@ class Header extends Component {
 
     onClickLogout = () => {
         sessionStorage.removeItem("access-token");
+        sessionStorage.removeItem("firstname")
         this.setState({ loggedIn: false });
-        ReactDOM.render(<Home />, document.getElementById("root"));
-    }
-
-    onClickProfile = () => {
-        ReactDOM.render(<Profile />, document.getElementById("root"));
     }
 
     render() {
@@ -301,7 +298,7 @@ class Header extends Component {
                         <div>
                             <div style={{ color: "white", margin: "0px 20px", display: "flex", cursor: "pointer" }} aria-controls="simple-menu"
                                 aria-haspopup="true" onClick={this.handleClick}>
-                                <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > {this.state.firstName}</span>
+                                <AccountCircleIcon style={{ margin: "0px 5px" }} /><span > {this.state.firstName ? this.state.firstName : sessionStorage.getItem("firstname")}</span>
 
                             </div>
                             <Menu
@@ -311,8 +308,13 @@ class Header extends Component {
                                 open={Boolean(this.state.anchorEl)}
                                 onClose={this.handleClose}
                             >
-                                <MenuItem onClick={this.onClickProfile}>Profile</MenuItem>
-                                <MenuItem onClick={this.onClickLogout}>Logout</MenuItem>
+                                <Link to='/profile'>
+                                    <MenuItem >
+                                        Profile</MenuItem>
+                                </Link>
+                                <Link to='/'>
+                                    <MenuItem onClick={this.onClickLogout}>Logout</MenuItem>
+                                </Link>
                             </Menu>
                         </div>
                     }
@@ -424,7 +426,7 @@ class Header extends Component {
                         aria-label="close"
                         color="inherit"
                         onClick={this.handleCloseAlert}>x
-                    </IconButton>]}
+                </IconButton>]}
                 />}
                 { !this.state.loggedIn && <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
