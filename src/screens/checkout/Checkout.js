@@ -58,6 +58,8 @@ class Checkout extends Component {
       cityRequired: "displayNone",
       stateRequired: "displayNone",
       pinRequired: "displayNone",
+      selectedItem: "",
+      selectedItemIcon: ""
     }
   };
 
@@ -96,6 +98,7 @@ class Checkout extends Component {
     let that = this;
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
+        // debugger;
         console.log(JSON.parse(this.responseText));
         that.setState({
           savedAddresses: JSON.parse(this.responseText).addresses
@@ -108,8 +111,9 @@ class Checkout extends Component {
     xhr.send(data);
   }
 
-  handleAddressClick = (idx) => {
-
+  handleAddressClick = (e) => {
+    this.setState({ selectedItem: e.currentTarget.parentElement.getAttribute('id') });
+    this.setState({ selectedItemIcon: e.currentTarget.parentElement.getAttribute('id') });
   }
 
   flatChangeHandler = (e) => {
@@ -181,17 +185,23 @@ class Checkout extends Component {
                 {this.state.savedAddresses && <div>
                   <GridList cols={3} style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', width: '100%' }}>
                     {this.state.savedAddresses.map((address, idx) => (
-                      <GridListTile key={address.id} className="address-grid">
-                        <div >
+                      <GridListTile key={address.id}
+                        // onClick={this.handleAddressClick}
+                        id={address.id}
+                      // className={`${this.state.selectedItem === address.id ? "selectedGrid" : ""}`}
+                      >
+                        <div id={address.id}
+                          className={`${this.state.selectedItem === address.id ? "selectedGrid" : ""}`}>
                           <div>{address.flat_building_name}</div>
                           <div>{address.locality}</div>
                           <div>{address.city}</div>
-                          {/* <div>{address.state.state_name}</div> */}
+                          {/* <p>{address['state'].state_name}</p> */}
                           <div>{address.pincode}</div>
-                          <IconButton >
-                            <CheckCircle onClick={this.handleAddressClick(idx)} />
+                          <IconButton onClick={this.handleAddressClick}>
+                            <CheckCircle className={`${this.state.selectedItemIcon === address.id ? "selectedGridIcon" : ""}`} />
                           </IconButton>
                         </div>
+
                       </GridListTile>
                     ))}
                   </GridList>
@@ -243,11 +253,11 @@ class Checkout extends Component {
                   Save
                         </Button>
               </TabPanel>
-            </div>
+            </div >
             <div className="right">
               Summary
             </div>
-          </div>
+          </div >
         );
       case 1:
         return (
