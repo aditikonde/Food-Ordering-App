@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { parseCategories } from '../../common/helpers/helper';
 import { currencyFormat } from '../../common/helpers/helper';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
 
 
 class Details extends Component {
@@ -20,8 +22,15 @@ class Details extends Component {
             categories: [],
             cartAmount: 0,
             cartItemNum: 0,
+            snackOpen: false,
+            snackMsg: "",
+            snackPosition: {
+                vertical: 'bottom',
+                horizontal: 'left'
+            },
         }
     }
+
 
     componentWillMount() {
         // This is how we can access data passed using props.history.push
@@ -51,7 +60,18 @@ class Details extends Component {
 
     }
 
+
+    handleSnackBarClose = () => {
+        this.setState({ snackOpen: false });
+    };
+    handleSnackBarOpen = (msg) => {
+        this.setState({ snackOpen: true });
+        // this.setState({ snackOpen: true, snackMsg: msg });
+        console.log(this.state.snackOpen + "--snackopn");
+    }
+
     checkoutClickHandler = () => {
+
         let pathStr = '/checkout';
         this.props.history.push({
             pathname: pathStr,
@@ -109,8 +129,25 @@ class Details extends Component {
                                 </CardContent>
                                 <CardActions>
                                     <Button variant="contained" style={{ width: '100%' }} color="primary"
-                                        onClick={this.checkoutClickHandler}
+                                        onClick={this.state.cartItemNum == 0 ? this.handleSnackBarOpen :
+                                            this.checkoutClickHandler}
+                                    // onClick={this.checkoutClickHandler}
                                     >Checkout</Button>
+
+                                    <div>
+                                        <Snackbar
+                                            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                            open={this.state.snackOpen}
+                                            // open='true'
+                                            message="Please add an item to your cart!"
+                                            action={[<IconButton
+                                                key="close"
+                                                aria-label="close"
+                                                color="inherit"
+                                                onClick={this.handleSnackBarClose}>x
+                                                </IconButton>]}
+                                        />
+                                    </div>
                                 </CardActions>
                             </Card>
                         </div>
