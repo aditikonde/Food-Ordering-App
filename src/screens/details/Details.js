@@ -30,6 +30,8 @@ class Details extends Component {
             cartItemNum: 0,
             snackOpen: false,
             snackAddItem: false,
+            snackIncItem: false,
+            snackDecItem: false,
         }
     }
 
@@ -66,6 +68,7 @@ class Details extends Component {
         if (item.itemCount == 0) {
 
         } else {
+            this.setState({ snackDecItem: true });
 
             let cartCount = this.state.cartItemNum - 1;
             this.setState({ cartItemNum: cartCount });
@@ -84,9 +87,9 @@ class Details extends Component {
     };
 
     incItemHandler = (item) => {
+        this.setState({ snackIncItem: true });
         let cartCount = this.state.cartItemNum + 1;
         this.setState({ cartItemNum: cartCount });
-
 
         let item_Count = item.itemCount + 1;
         let sum = item.itemTotal + item.price;
@@ -108,6 +111,14 @@ class Details extends Component {
     handleAddItemSnackBarClose = () => {
         this.setState({ snackAddItem: false });
     };
+
+    handleDecItemSnackBarClose = () => {
+        this.setState({ snackDecItem: false });
+    }
+
+    handleIncItemSnackBarClose = () => {
+        this.setState({ snackIncItem: false });
+    }
 
 
     handleSnackBarOpen = (msg) => {
@@ -292,6 +303,16 @@ class Details extends Component {
 
                                         <SnackBar msg="Please add an item to your cart!" isOpen={this.state.snackOpen}
                                             handleSnackBarAddItemClose={this.handleSnackBarClose} />
+                                    </div>
+                                    <div>
+                                        <SnackBar msg="Item quantity increased by 1!" isOpen={this.state.snackIncItem}
+                                            handleSnackBarAddItemClose={this.handleIncItemSnackBarClose}
+                                        />
+                                    </div>
+                                    <div>
+                                        <SnackBar msg="Item quantity decreased by 1!" isOpen={this.state.snackDecItem}
+                                            handleSnackBarAddItemClose={this.handleDecItemSnackBarClose}
+                                        />
                                     </div>
                                 </CardActions>
                             </Card>
