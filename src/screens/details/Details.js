@@ -129,7 +129,9 @@ class Details extends Component {
     }
 
     checkoutClickHandler = () => {
-        let pathStr = '/checkout';
+
+        // let pathStr = '/checkout';
+        let pathStr = sessionStorage.getItem("access-token") === null ? '/' : '/checkout';
         this.props.history.push({
             pathname: pathStr,
         });
@@ -235,7 +237,7 @@ class Details extends Component {
                                                         <div style={{ paddingRight: '5px', width: '2%' }}>
                                                             <span style={{ color: item.item_type == 'VEG' ? 'green' : 'red' }}><i className="fa fa-stop-circle-o" aria-hidden="true"></i></span>
                                                         </div>
-                                                        <div style={{ width: '48%' }}>
+                                                        <div style={{ width: '50%' }}>
                                                             <span className="item-name grey">{item.item_name}</span>
                                                         </div>
 
@@ -284,7 +286,6 @@ class Details extends Component {
                                     <Button variant="contained" style={{ width: '100%' }} color="primary"
                                         onClick={this.state.cartItemNum === 0 ? this.handleSnackBarOpen :
                                             this.checkoutClickHandler}
-                                    // onClick={this.checkoutClickHandler}
                                     >Checkout</Button>
 
                                     <div>

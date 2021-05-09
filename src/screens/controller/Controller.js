@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from '../home/Home';
 import Details from '../details/Details';
 import Checkout from '../checkout/Checkout';
+import Profile from '../profile/Profile';
 
 class Controller extends Component {
 
@@ -13,6 +14,7 @@ class Controller extends Component {
                     <Route exact path="/" component={Home} />
                     <Route exact path="/restaurant/:id" component={Details} />
                     <Route exact path="/checkout" component={Checkout} />
+                    <Route exact path="/profile" component={Profile} />
                     {/* <Route path='/restaurant/:id' render={(props) => <Details {...props} />} /> */}
                 </Switch>
             </Router>

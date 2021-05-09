@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import { AppBar, Box, FormControl, FormControlLabel, FormHelperText, FormLabel, GridList, GridListTile, GridListTileBar, IconButton, Input, InputLabel, Radio, RadioGroup, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Box, FormControl, FormControlLabel, FormHelperText, FormLabel, GridList, GridListTile, IconButton, Input, InputLabel, ListItemText, MenuItem, Radio, RadioGroup, Select, Tab, Tabs } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
 
 function TabPanel(props) {
@@ -58,6 +58,11 @@ class Checkout extends Component {
       cityRequired: "displayNone",
       stateRequired: "displayNone",
       pinRequired: "displayNone",
+      selectedItem: "",
+      selectedItemIcon: "",
+      isAddressSelected: false,
+      invalidPin: "displayNone",
+      nameOfState: ""
     }
   };
 
@@ -96,7 +101,6 @@ class Checkout extends Component {
     let that = this;
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
-        console.log(JSON.parse(this.responseText));
         that.setState({
           savedAddresses: JSON.parse(this.responseText).addresses
         });
@@ -106,10 +110,26 @@ class Checkout extends Component {
     xhr.open("GET", url);
     xhr.setRequestHeader("authorization", "Bearer " + sessionStorage.getItem("access-token"))
     xhr.send(data);
+
+    let statesdata = null;
+    let statesurl = "http://localhost:8080/api/states";
+    let xhrstates = new XMLHttpRequest();
+    xhrstates.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        that.setState({ allstates: JSON.parse(this.responseText).states })
+      }
+    });
+
+    xhrstates.open("GET", statesurl);
+    xhrstates.send(statesdata);
   }
 
-  handleAddressClick = (idx) => {
-
+  handleAddressClick = (e) => {
+    this.setState({
+      selectedItem: e.currentTarget.parentElement.getAttribute('id'),
+      selectedItemIcon: e.currentTarget.parentElement.getAttribute('id'),
+      isAddressSelected: true
+    });
   }
 
   flatChangeHandler = (e) => {
@@ -138,20 +158,36 @@ class Checkout extends Component {
     this.state.city === "" ? this.setState({ cityRequired: "displayBlock" }) : this.setState({ cityRequired: "displayNone" });
     this.state.state === "" ? this.setState({ stateRequired: "displayBlock" }) : this.setState({ stateRequired: "displayNone" });
     this.state.pin === "" ? this.setState({ pinRequired: "displayBlock" }) : this.setState({ pinRequired: "displayNone" });
+    if (this.state.pin && this.state.pin.length !== 6) {
+      this.setState({ invalidPin: "displayBlock" });
+      return;
+    }
+    else {
+      this.setState({ invalidPin: "displayNone" });
+    }
 
     let data = JSON.stringify({
       city: this.state.city,
       flat_building_name: this.state.flat,
       locality: this.state.locality,
       pincode: this.state.pin,
-      state_uuid: "c860e78a-a29b-11e8-9a3a-720006ceb890"
+      state_uuid: this.state.state
     });
     let xhr = new XMLHttpRequest();
     let that = this;
     xhr.addEventListener("readystatechange", function () {
-      if (this.readyState === 4) {
-        console.log(this.responseText);
-        //reload newly added address
+      if (this.readyState === 4 && xhr.status === 201) {
+        const newAddr = {
+          city: that.state.city,
+          flat_building_name: that.state.flat,
+          id: JSON.parse(this.responseText).id,
+          locality: that.state.locality,
+          pincode: that.state.pin,
+          state: that.state.allstates.filter((p) => p.id === that.state.state)[0]
+        }
+        let allAddr = that.state.savedAddresses;
+        allAddr.push(newAddr)
+        that.setState({ savedAddresses: allAddr, tabvalue: 0 });
       }
     });
     xhr.open("POST", "http://localhost:8080/api/address");
@@ -181,17 +217,21 @@ class Checkout extends Component {
                 {this.state.savedAddresses && <div>
                   <GridList cols={3} style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', width: '100%' }}>
                     {this.state.savedAddresses.map((address, idx) => (
-                      <GridListTile key={address.id} className="address-grid">
-                        <div >
+                      <GridListTile key={address.id}
+                        id={address.id}
+                      >
+                        <div id={address.id}
+                          className={`${this.state.selectedItem === address.id ? "selectedGrid" : ""}`}>
                           <div>{address.flat_building_name}</div>
                           <div>{address.locality}</div>
                           <div>{address.city}</div>
-                          {/* <div>{address.state.state_name}</div> */}
+                          <div>{address.state && address.state.state_name}</div>
                           <div>{address.pincode}</div>
-                          <IconButton >
-                            <CheckCircle onClick={this.handleAddressClick(idx)} />
+                          <IconButton onClick={this.handleAddressClick}>
+                            <CheckCircle className={`${this.state.selectedItemIcon === address.id ? "selectedGridIcon" : ""}`} />
                           </IconButton>
                         </div>
+
                       </GridListTile>
                     ))}
                   </GridList>
@@ -224,7 +264,22 @@ class Checkout extends Component {
                 <br />
                 <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
                   <InputLabel htmlFor="state">State</InputLabel>
-                  <Input id="state" onChange={this.stateChangeHandler} />
+                  <InputLabel id="demo-simple-select-label" htmlFor="state">State</InputLabel>
+                  {/* <Input id="state" onChange={this.stateChangeHandler} /> */}
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={this.state.state}
+                    onChange={this.stateChangeHandler}
+                  >
+
+                    {this.state.allstates && this.state.allstates.map((st) =>
+                      <MenuItem key={st.id} value={st.id} >
+                        <ListItemText primary={st.state_name} />
+                      </MenuItem>
+                    )}
+
+                  </Select>
                   <FormHelperText className={this.state.stateRequired}><span className="red" >required</span>
                   </FormHelperText>
 
@@ -234,6 +289,9 @@ class Checkout extends Component {
                   <InputLabel htmlFor="pin">Pincode</InputLabel>
                   <Input id="pin" onChange={this.pinChangeHandler} />
                   <FormHelperText className={this.state.pinRequired}><span className="red" >required</span>
+                  </FormHelperText>
+                  <FormHelperText className={this.state.invalidPin}><span className="red" >
+                    Pincode must contain only numbers and must be 6 digits long</span>
                   </FormHelperText>
 
                 </FormControl>
@@ -245,7 +303,6 @@ class Checkout extends Component {
               </TabPanel>
             </div>
             <div className="right">
-              Summary
             </div>
           </div>
         );
@@ -296,7 +353,7 @@ class Checkout extends Component {
                         variant="contained"
                         color="primary"
                         onClick={this.handleNext}
-
+                        disabled={!this.state.isAddressSelected && this.state.tabvalue === 1}
                       >
                         {this.state.activeStep === this.state.steps.length - 1 ? 'Finish' : 'Next'}
                       </Button>
