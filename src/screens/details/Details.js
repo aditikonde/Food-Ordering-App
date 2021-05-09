@@ -100,8 +100,6 @@ class Details extends Component {
         let total = this.state.cartAmount;
         total += item.price;
         this.setState({ cartAmount: total });
-
-
     }
 
     handleSnackBarClose = () => {
@@ -126,17 +124,32 @@ class Details extends Component {
     };
 
     addItemHandler = (itemC) => {
-        this.setState({ snackAddItem: true });
-        let cartCount = this.state.cartItemNum + 1;
-        this.setState({ cartItemNum: cartCount });
+
         let cartAllItems = this.state.cartItems;
-        let totalOfThisItem = itemC.price;
-        let item = { ...itemC, itemCount: 1, itemTotal: totalOfThisItem };
-        cartAllItems.push(item);
-        this.setState({ cartItems: cartAllItems });
-        let total = this.state.cartAmount;
-        total += item.itemTotal;
-        this.setState({ cartAmount: total });
+        let isItemPresent = cartAllItems.some(
+            value => { return value.id == itemC.id });
+
+        if (isItemPresent) {
+
+            let item = cartAllItems.find(i => i.id === itemC.id);
+
+            this.incItemHandler(item);
+
+        } else {
+
+            this.setState({ snackAddItem: true });
+            let cartCount = this.state.cartItemNum + 1;
+            this.setState({ cartItemNum: cartCount });
+            let cartAllItems = this.state.cartItems;
+
+            let totalOfThisItem = itemC.price;
+            let item = { ...itemC, itemCount: 1, itemTotal: totalOfThisItem };
+            cartAllItems.push(item);
+            this.setState({ cartItems: cartAllItems });
+            let total = this.state.cartAmount;
+            total += item.itemTotal;
+            this.setState({ cartAmount: total });
+        }
     }
 
     checkoutClickHandler = () => {
