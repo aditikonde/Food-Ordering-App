@@ -9,6 +9,7 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
+import SnackBar from '../../common/snackbar/SnackBar';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -68,8 +69,8 @@ class Checkout extends Component {
       isAddressSelected: false,
       invalidPin: "displayNone",
       nameOfState: "",
-
-
+      snackPlaceOrder: false,
+      wrongOrder: false
     }
   };
 
@@ -140,6 +141,13 @@ class Checkout extends Component {
     xhrstates.send(statesdata);
   }
 
+  handleClose = () => {
+    this.setState({ snackPlaceOrder: false });
+    this.props.history.push({
+      pathname: '/'
+    });
+  }
+
   handleAddressClick = (e) => {
     this.setState({
       selectedItem: e.currentTarget.parentElement.getAttribute('id'),
@@ -166,6 +174,18 @@ class Checkout extends Component {
 
   pinChangeHandler = (e) => {
     this.setState({ pin: e.target.value })
+  }
+
+  wrongOrderHandleClose = () => {
+    this.setState({ wrongOrder: false });
+  }
+
+  placeOrderHandler = () => {
+    if (this.state.isAddressSelected) {
+      this.setState({ snackPlaceOrder: true });
+    } else {
+      this.setState({ wrongOrder: true });
+    }
   }
 
   newAddrClickHandler = () => {
@@ -433,11 +453,22 @@ class Checkout extends Component {
 
 
                 <CardActions style={{ padding: '20px 0px 0px 0px' }}>
-                  <Button variant="contained" style={{ width: '100%' }} color="primary">PLACE ORDER</Button>
+                  <Button variant="contained" style={{ width: '100%' }} color="primary" onClick=
+                    {this.placeOrderHandler}>PLACE ORDER</Button>
 
                 </CardActions>
               </CardContent>
             </Card>
+          </div>
+          <div>
+            <SnackBar msg="Order placed successfully! Your order ID is 5" isOpen={this.state.snackPlaceOrder}
+              handleSnackBarAddItemClose={this.handleClose}
+            />
+          </div>
+          <div>
+            <SnackBar msg="Unable to place your order! Please try again" isOpen={this.state.wrongOrder}
+              handleSnackBarAddItemClose={this.wrongOrderHandleClose}
+            />
           </div>
         </div>
 
