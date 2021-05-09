@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import Header from '../../common/header/Header';
 import "./Checkout.css";
+import Divider from '@material-ui/core/Divider';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import { AppBar, Box, FormControl, FormControlLabel, FormHelperText, FormLabel, GridList, GridListTile, IconButton, Input, InputLabel, ListItemText, MenuItem, Radio, RadioGroup, Select, Tab, Tabs } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
+import { currencyFormat } from '../../common/helpers/helper';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -62,7 +67,9 @@ class Checkout extends Component {
       selectedItemIcon: "",
       isAddressSelected: false,
       invalidPin: "displayNone",
-      nameOfState: ""
+      nameOfState: "",
+
+
     }
   };
 
@@ -93,6 +100,15 @@ class Checkout extends Component {
   handleTabChange = (event, newValue) => {
     this.setState({ tabvalue: newValue });
   };
+
+  componentWillMount() {
+    let resto_name = this.props.history.location.restaurantName;
+    let cartAmount = this.props.history.location.cartAmount;
+
+    let cartItems = this.props.history.location.cartItems;
+
+    this.setState({ restoName: resto_name, cartAmount: cartAmount, cartItems: cartItems });
+  }
 
   componentDidMount() {
     let data = null;
@@ -303,6 +319,50 @@ class Checkout extends Component {
               </TabPanel>
             </div>
             <div className="right">
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2" className="cart-header" >Summary</Typography>
+
+                  <Typography className="resto-name">{this.state.restoName}</Typography>
+                  <Typography>
+                    {this.state.cartItems.map(
+                      (item) => (
+                        <div className="cart-item-row">
+                          <div style={{ paddingRight: '5px', width: '2%' }}>
+                            <span style={{ color: item.item_type == 'VEG' ? 'green' : 'red' }}><i className="fa fa-stop-circle-o" aria-hidden="true"></i></span>
+                          </div>
+                          <div style={{ width: '65%' }}>
+                            <span className="item-name grey">{item.item_name}</span>
+                          </div>
+
+                          <div style={{ width: '10%' }}>
+
+                            <span className="cart-i-count">
+                              {item.itemCount}</span>
+
+                          </div>
+                          <div style={{ width: '23%', float: 'right' }}>
+                            <span className="grey " style={{ float: 'right' }}><i className="fa fa-inr" aria-hidden="true"></i>{currencyFormat(item.itemTotal)}</span>
+                          </div>
+
+                        </div>
+                      )
+                    )}
+
+                  </Typography>
+
+                  <Divider light />
+                  <Typography className="cart-total-amt" ><span className="cart-total">Net Amount</span>
+                    <span className="cart-amount-net"><i className="fa fa-inr grey" aria-hidden="true"></i> {currencyFormat(this.state.cartAmount)} </span>
+                  </Typography>
+
+
+                  <CardActions style={{ padding: '20px 0px 0px 0px' }}>
+                    <Button variant="contained" style={{ width: '100%' }} color="primary">PLACE ORDER</Button>
+
+                  </CardActions>
+                </CardContent>
+              </Card>
             </div>
           </div>
         );

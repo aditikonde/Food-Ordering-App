@@ -25,17 +25,30 @@
 }
 
 .left {
-    width: 75%;
+    width: 70%;
 }
 
 .right {
     /* padding-top: 20px; */
-    width: 25%;
+    width: 30%;
 }
 
 .displayNone {
   display: none;
 }
+
+.cart-i-count {
+  color: grey;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+.resto-name{
+  padding: 10px 0px;
+  color: grey;
+  font-weight: 500;
+  font-family: Arial, Helvetica, sans-serif;
+  }
 
 .displayBlock {
   display: block;
@@ -51,4 +64,10 @@
 
 .selectedGridIcon {
   color:green;
+}
+
+.cart-amount-net{
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  margin-left: 48%;
 }

@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { parseCategories } from '../../common/helpers/helper';
 import { currencyFormat } from '../../common/helpers/helper';
-import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
@@ -154,10 +153,17 @@ class Details extends Component {
 
     checkoutClickHandler = () => {
 
-        // let pathStr = '/checkout';
         let pathStr = sessionStorage.getItem("access-token") === null ? '/' : '/checkout';
+
+        let restaurantName = this.state.restaurant.restaurant_name;
+        let cartAmount = this.state.cartAmount;
+        let cartItems = this.state.cartItems;
+
         this.props.history.push({
             pathname: pathStr,
+            restaurantName: restaurantName,
+            cartAmount: cartAmount,
+            cartItems: cartItems
         });
     }
 
