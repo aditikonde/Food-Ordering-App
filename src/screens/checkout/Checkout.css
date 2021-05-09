@@ -25,11 +25,12 @@
 }
 
 .left {
-    width: 70%;
+    width: 100%;
 }
 
-.right {
-    /* padding-top: 20px; */
+.div-right {
+    margin-top: 30px;
+    padding-right: 30px;
     width: 30%;
 }
 
@@ -69,5 +70,13 @@
 .cart-amount-net{
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
-  margin-left: 48%;
+  margin-left: 51%;
+}
+
+.outer-div {
+  display: flex;
+}
+
+.div-left {
+  width: 70%;
 }

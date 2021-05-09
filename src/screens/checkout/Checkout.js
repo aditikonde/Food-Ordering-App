@@ -220,150 +220,110 @@ class Checkout extends Component {
           <div className="flex-container">
 
             <div className="left">
-              <AppBar position="static">
-                <Tabs value={this.state.tabvalue} onChange={this.handleTabChange} aria-label="simple tabs example">
-                  <Tab label="EXISTING ADDRESS" {...this.a11yProps(0)} />
-                  <Tab label="NEW ADDRESS" {...this.a11yProps(1)} />
-                </Tabs>
-              </AppBar>
-              <TabPanel value={this.state.tabvalue} index={0}>
-                {!this.state.savedAddresses && <div>
-                  There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.
+              <div>
+                <AppBar position="static">
+                  <Tabs value={this.state.tabvalue} onChange={this.handleTabChange} aria-label="simple tabs example">
+                    <Tab label="EXISTING ADDRESS" {...this.a11yProps(0)} />
+                    <Tab label="NEW ADDRESS" {...this.a11yProps(1)} />
+                  </Tabs>
+                </AppBar>
+                <TabPanel value={this.state.tabvalue} index={0}>
+                  {!this.state.savedAddresses && <div>
+                    There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.
                  </div>}
-                {this.state.savedAddresses && <div>
-                  <GridList cols={3} style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', width: '100%' }}>
-                    {this.state.savedAddresses.map((address, idx) => (
-                      <GridListTile key={address.id}
-                        id={address.id}
-                      >
-                        <div id={address.id}
-                          className={`${this.state.selectedItem === address.id ? "selectedGrid" : ""}`}>
-                          <div>{address.flat_building_name}</div>
-                          <div>{address.locality}</div>
-                          <div>{address.city}</div>
-                          <div>{address.state && address.state.state_name}</div>
-                          <div>{address.pincode}</div>
-                          <IconButton onClick={this.handleAddressClick}>
-                            <CheckCircle className={`${this.state.selectedItemIcon === address.id ? "selectedGridIcon" : ""}`} />
-                          </IconButton>
-                        </div>
+                  {this.state.savedAddresses && <div>
+                    <GridList cols={3} style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', width: '100%' }}>
+                      {this.state.savedAddresses.map((address, idx) => (
+                        <GridListTile key={address.id}
+                          id={address.id}
+                        >
+                          <div id={address.id}
+                            className={`${this.state.selectedItem === address.id ? "selectedGrid" : ""}`}>
+                            <div>{address.flat_building_name}</div>
+                            <div>{address.locality}</div>
+                            <div>{address.city}</div>
+                            <div>{address.state && address.state.state_name}</div>
+                            <div>{address.pincode}</div>
+                            <IconButton onClick={this.handleAddressClick}>
+                              <CheckCircle className={`${this.state.selectedItemIcon === address.id ? "selectedGridIcon" : ""}`} />
+                            </IconButton>
+                          </div>
 
-                      </GridListTile>
-                    ))}
-                  </GridList>
-                </div>}
-              </TabPanel>
-              <TabPanel value={this.state.tabvalue} index={1}>
-                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
-                  <InputLabel htmlFor="flat" >Flat/Building No.</InputLabel>
-                  <Input id="flat" type="text" onChange={this.flatChangeHandler} />
-                  <FormHelperText className={this.state.flatRequired}><span className="red" >required</span>
-                  </FormHelperText>
+                        </GridListTile>
+                      ))}
+                    </GridList>
+                  </div>}
+                </TabPanel>
+                <TabPanel value={this.state.tabvalue} index={1}>
+                  <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                    <InputLabel htmlFor="flat" >Flat/Building No.</InputLabel>
+                    <Input id="flat" type="text" onChange={this.flatChangeHandler} />
+                    <FormHelperText className={this.state.flatRequired}><span className="red" >required</span>
+                    </FormHelperText>
 
-                </FormControl>
-                <br />
-                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
-                  <InputLabel htmlFor="locality">Locality</InputLabel>
-                  <Input id="locality" onChange={this.localityChangeHandler} />
-                  <FormHelperText className={this.state.localityRequired}><span className="red" >required</span>
-                  </FormHelperText>
+                  </FormControl>
+                  <br />
+                  <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                    <InputLabel htmlFor="locality">Locality</InputLabel>
+                    <Input id="locality" onChange={this.localityChangeHandler} />
+                    <FormHelperText className={this.state.localityRequired}><span className="red" >required</span>
+                    </FormHelperText>
 
-                </FormControl>
-                <br />
-                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
-                  <InputLabel htmlFor="city">City</InputLabel>
-                  <Input id="city" onChange={this.cityChangeHandler} />
-                  <FormHelperText className={this.state.cityRequired}><span className="red" >required</span>
-                  </FormHelperText>
+                  </FormControl>
+                  <br />
+                  <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                    <InputLabel htmlFor="city">City</InputLabel>
+                    <Input id="city" onChange={this.cityChangeHandler} />
+                    <FormHelperText className={this.state.cityRequired}><span className="red" >required</span>
+                    </FormHelperText>
 
-                </FormControl>
-                <br />
-                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
-                  <InputLabel htmlFor="state">State</InputLabel>
-                  <InputLabel id="demo-simple-select-label" htmlFor="state">State</InputLabel>
-                  {/* <Input id="state" onChange={this.stateChangeHandler} /> */}
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={this.state.state}
-                    onChange={this.stateChangeHandler}
-                  >
+                  </FormControl>
+                  <br />
+                  <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                    <InputLabel htmlFor="state">State</InputLabel>
+                    <InputLabel id="demo-simple-select-label" htmlFor="state">State</InputLabel>
+                    {/* <Input id="state" onChange={this.stateChangeHandler} /> */}
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={this.state.state}
+                      onChange={this.stateChangeHandler}
+                    >
 
-                    {this.state.allstates && this.state.allstates.map((st) =>
-                      <MenuItem key={st.id} value={st.id} >
-                        <ListItemText primary={st.state_name} />
-                      </MenuItem>
-                    )}
+                      {this.state.allstates && this.state.allstates.map((st) =>
+                        <MenuItem key={st.id} value={st.id} >
+                          <ListItemText primary={st.state_name} />
+                        </MenuItem>
+                      )}
 
-                  </Select>
-                  <FormHelperText className={this.state.stateRequired}><span className="red" >required</span>
-                  </FormHelperText>
+                    </Select>
+                    <FormHelperText className={this.state.stateRequired}><span className="red" >required</span>
+                    </FormHelperText>
 
-                </FormControl>
-                <br />
-                <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
-                  <InputLabel htmlFor="pin">Pincode</InputLabel>
-                  <Input id="pin" onChange={this.pinChangeHandler} />
-                  <FormHelperText className={this.state.pinRequired}><span className="red" >required</span>
-                  </FormHelperText>
-                  <FormHelperText className={this.state.invalidPin}><span className="red" >
-                    Pincode must contain only numbers and must be 6 digits long</span>
-                  </FormHelperText>
+                  </FormControl>
+                  <br />
+                  <FormControl required style={{ maxWidth: "250px", minWidth: "250px" }}>
+                    <InputLabel htmlFor="pin">Pincode</InputLabel>
+                    <Input id="pin" onChange={this.pinChangeHandler} />
+                    <FormHelperText className={this.state.pinRequired}><span className="red" >required</span>
+                    </FormHelperText>
+                    <FormHelperText className={this.state.invalidPin}><span className="red" >
+                      Pincode must contain only numbers and must be 6 digits long</span>
+                    </FormHelperText>
 
-                </FormControl>
-                <br />
-                <br />
-                <Button variant="contained" color="primary" onClick={this.newAddrClickHandler}>
-                  Save
+                  </FormControl>
+                  <br />
+                  <br />
+                  <Button variant="contained" color="primary" onClick={this.newAddrClickHandler}>
+                    Save
                         </Button>
-              </TabPanel>
+                </TabPanel>
+              </div>
+
             </div>
-            <div className="right">
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2" className="cart-header" >Summary</Typography>
-
-                  <Typography className="resto-name">{this.state.restoName}</Typography>
-                  <Typography>
-                    {this.state.cartItems.map(
-                      (item) => (
-                        <div className="cart-item-row">
-                          <div style={{ paddingRight: '5px', width: '2%' }}>
-                            <span style={{ color: item.item_type == 'VEG' ? 'green' : 'red' }}><i className="fa fa-stop-circle-o" aria-hidden="true"></i></span>
-                          </div>
-                          <div style={{ width: '65%' }}>
-                            <span className="item-name grey">{item.item_name}</span>
-                          </div>
-
-                          <div style={{ width: '10%' }}>
-
-                            <span className="cart-i-count">
-                              {item.itemCount}</span>
-
-                          </div>
-                          <div style={{ width: '23%', float: 'right' }}>
-                            <span className="grey " style={{ float: 'right' }}><i className="fa fa-inr" aria-hidden="true"></i>{currencyFormat(item.itemTotal)}</span>
-                          </div>
-
-                        </div>
-                      )
-                    )}
-
-                  </Typography>
-
-                  <Divider light />
-                  <Typography className="cart-total-amt" ><span className="cart-total">Net Amount</span>
-                    <span className="cart-amount-net"><i className="fa fa-inr grey" aria-hidden="true"></i> {currencyFormat(this.state.cartAmount)} </span>
-                  </Typography>
 
 
-                  <CardActions style={{ padding: '20px 0px 0px 0px' }}>
-                    <Button variant="contained" style={{ width: '100%' }} color="primary">PLACE ORDER</Button>
 
-                  </CardActions>
-                </CardContent>
-              </Card>
-            </div>
           </div>
         );
       case 1:
@@ -393,45 +353,95 @@ class Checkout extends Component {
     return (
       <div >
         <Header isHomePage={false} />
-        <div>
-          <Stepper activeStep={this.state.activeStep} orientation="vertical">
-            {this.state.steps.map((label, index) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-                <StepContent>
-                  <Typography>{this.getStepContent(index)}</Typography>
-                  <div >
-                    <div>
-                      <Button
-                        disabled={this.state.activeStep === 0}
-                        onClick={this.handleBack}
+        <div className="outer-div">
+          <div className="div-left">
+            <Stepper activeStep={this.state.activeStep} orientation="vertical">
+              {this.state.steps.map((label, index) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent>
+                    <Typography>{this.getStepContent(index)}</Typography>
+                    <div >
+                      <div>
+                        <Button
+                          disabled={this.state.activeStep === 0}
+                          onClick={this.handleBack}
 
-                      >
-                        Back
+                        >
+                          Back
                   </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleNext}
-                        disabled={!this.state.isAddressSelected && this.state.tabvalue === 1}
-                      >
-                        {this.state.activeStep === this.state.steps.length - 1 ? 'Finish' : 'Next'}
-                      </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.handleNext}
+                          disabled={!this.state.isAddressSelected && this.state.tabvalue === 1}
+                        >
+                          {this.state.activeStep === this.state.steps.length - 1 ? 'Finish' : 'Next'}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
-          {this.state.activeStep === this.state.steps.length && (
-            <Paper square elevation={0} >
-              <Typography>View the summary & place your order now!</Typography>
-              <Button onClick={this.handleReset} >
-                Change
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+            {this.state.activeStep === this.state.steps.length && (
+              <Paper square elevation={0} >
+                <Typography>View the summary & place your order now!</Typography>
+                <Button onClick={this.handleReset} >
+                  Change
           </Button>
-            </Paper>
-          )}
+              </Paper>
+            )}
+          </div>
+          <div className="div-right">
+            <Card variant="outlined">
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2" className="cart-header" >Summary</Typography>
+
+                <Typography className="resto-name">{this.state.restoName}</Typography>
+                <Typography>
+                  {this.state.cartItems.map(
+                    (item) => (
+                      <div className="cart-item-row">
+                        <div style={{ paddingRight: '5px', width: '2%' }}>
+                          <span style={{ color: item.item_type == 'VEG' ? 'green' : 'red' }}><i className="fa fa-stop-circle-o" aria-hidden="true"></i></span>
+                        </div>
+                        <div style={{ width: '65%' }}>
+                          <span className="item-name grey">{item.item_name}</span>
+                        </div>
+
+                        <div style={{ width: '10%' }}>
+
+                          <span className="cart-i-count">
+                            {item.itemCount}</span>
+
+                        </div>
+                        <div style={{ width: '23%', float: 'right' }}>
+                          <span className="grey " style={{ float: 'right' }}><i className="fa fa-inr" aria-hidden="true"></i>{currencyFormat(item.itemTotal)}</span>
+                        </div>
+
+                      </div>
+                    )
+                  )}
+
+                </Typography>
+
+                <Divider light />
+                <Typography className="cart-total-amt" ><span className="cart-total">Net Amount</span>
+                  <span className="cart-amount-net"><i className="fa fa-inr grey" aria-hidden="true"></i> {currencyFormat(this.state.cartAmount)} </span>
+                </Typography>
+
+
+                <CardActions style={{ padding: '20px 0px 0px 0px' }}>
+                  <Button variant="contained" style={{ width: '100%' }} color="primary">PLACE ORDER</Button>
+
+                </CardActions>
+              </CardContent>
+            </Card>
+          </div>
         </div>
+
+
       </div>
     )
   }
