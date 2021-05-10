@@ -31,6 +31,7 @@ class Details extends Component {
             snackAddItem: false,
             snackIncItem: false,
             snackDecItem: false,
+            snackLogin: false
         }
     }
 
@@ -105,6 +106,10 @@ class Details extends Component {
         this.setState({ snackOpen: false });
     };
 
+    handleLoginCloseSnack = () => {
+        this.setState({ snackLogin: false });
+    }
+
     handleAddItemSnackBarClose = () => {
         this.setState({ snackAddItem: false });
     };
@@ -153,24 +158,32 @@ class Details extends Component {
 
     checkoutClickHandler = () => {
 
-        let pathStr = sessionStorage.getItem("access-token") === null ? '/' : '/checkout';
+        if (sessionStorage.getItem("access-token") === null) {
+            this.setState({ snackLogin: true });
+        } else {
 
-        let restaurantName = this.state.restaurant.restaurant_name;
-        let cartAmount = this.state.cartAmount;
-        let cartItems = this.state.cartItems;
 
-        this.props.history.push({
-            pathname: pathStr,
-            restaurantName: restaurantName,
-            cartAmount: cartAmount,
-            cartItems: cartItems
-        });
+            // let pathStr = sessionStorage.getItem("access-token") === null ? '/' : '/checkout';
+
+            let pathStr = '/checkout';
+
+            let restaurantName = this.state.restaurant.restaurant_name;
+            let cartAmount = this.state.cartAmount;
+            let cartItems = this.state.cartItems;
+
+            this.props.history.push({
+                pathname: pathStr,
+                restaurantName: restaurantName,
+                cartAmount: cartAmount,
+                cartItems: cartItems
+            });
+        }
     }
 
     render() {
         return (
             <div>
-                <Header />
+                <Header isNotHomePage={true} />
                 <div className="details-body">
                     <div className="restaurant-info">
                         <div className="details-img">
@@ -333,6 +346,12 @@ class Details extends Component {
                                             handleSnackBarAddItemClose={this.handleDecItemSnackBarClose}
                                         />
                                     </div>
+                                    <div>
+                                        <SnackBar msg="Please login first!" isOpen={this.state.snackLogin}
+                                            handleSnackBarAddItemClose={this.handleLoginCloseSnack}
+                                        />
+                                    </div>
+
                                 </CardActions>
                             </Card>
                         </div>

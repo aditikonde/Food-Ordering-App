@@ -109,9 +109,9 @@ class Checkout extends Component {
     let cartItems = this.props.history.location.cartItems;
 
     this.setState({ restoName: resto_name, cartAmount: cartAmount, cartItems: cartItems });
-  }
+    // }
 
-  componentDidMount() {
+    // componentDidMount() {
     let data = null;
     let url = "http://localhost:8080/api/address/customer";
     let xhr = new XMLHttpRequest();

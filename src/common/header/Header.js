@@ -287,7 +287,7 @@ class Header extends Component {
                     ></Input>
                 </div>}
                 <div>
-                    {!this.state.loggedIn && this.props.isHomePage &&
+                    {!this.state.loggedIn &&
                         <div className="header-login">
                             <Button variant="contained" color="default" startIcon={<AccountCircleIcon />} onClick={this.openModalHandler}>
                                 LOGIN
@@ -415,33 +415,37 @@ class Header extends Component {
                             </TabContainer>}
                     </Modal>
                 </div>
-                { this.state.loggedIn && <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    open={this.state.openAlert}
-                    autoHideDuration={5000}
-                    onClose={this.handleCloseAlert}
-                    message="Logged in successfully!"
-                    action={[<IconButton
-                        key="close"
-                        aria-label="close"
-                        color="inherit"
-                        onClick={this.handleCloseAlert}>x
+                {
+                    this.state.loggedIn && <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={this.state.openAlert}
+                        autoHideDuration={5000}
+                        onClose={this.handleCloseAlert}
+                        message="Logged in successfully!"
+                        action={[<IconButton
+                            key="close"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.handleCloseAlert}>x
                 </IconButton>]}
-                />}
-                { !this.state.loggedIn && <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    open={this.state.openAlert}
-                    autoHideDuration={5000}
-                    onClose={this.handleCloseAlert}
-                    message="Registered successfully! Please login now!"
-                    action={[<IconButton
-                        key="close"
-                        aria-label="close"
-                        color="inherit"
-                        onClick={this.handleCloseAlert}>x
+                    />
+                }
+                {
+                    !this.state.loggedIn && <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={this.state.openAlert}
+                        autoHideDuration={5000}
+                        onClose={this.handleCloseAlert}
+                        message="Registered successfully! Please login now!"
+                        action={[<IconButton
+                            key="close"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.handleCloseAlert}>x
                     </IconButton>]}
-                />}
-            </div>
+                    />
+                }
+            </div >
         )
     }
 }
