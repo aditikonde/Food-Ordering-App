@@ -53,7 +53,7 @@ class Checkout extends Component {
       steps: ['Delivery', 'Payment'],
       value: "cod",
       tabvalue: 0,
-      savedAddresses: [{}],
+      savedAddresses: [],
       flat: "",
       locality: "",
       city: "",
@@ -221,7 +221,8 @@ class Checkout extends Component {
           pincode: that.state.pin,
           state: that.state.allstates.filter((p) => p.id === that.state.state)[0]
         }
-        let allAddr = that.state.savedAddresses;
+        let allAddr = that.state.savedAddresses ? that.state.savedAddresses : [];
+
         allAddr.push(newAddr)
         that.setState({ savedAddresses: allAddr, tabvalue: 0 });
       }
